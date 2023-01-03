@@ -1,0 +1,245 @@
+* {
+    --purple: #a200ca;
+    --white: #f8f9f8;
+    --dark_shade: #565761;
+    margin: 0;
+    padding: 0;
+}
+
+/* TEXT */
+
+h1 {
+    font-size: 3rem;
+}
+
+.h1dynamic {
+    font-size: 3rem;
+    font-size: max(calc(1.5rem + 1vw), 14px);
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1rem;
+}
+
+p { 
+    text-align: justify;
+}
+
+/* BODY */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-family: 'Archivo', sans-serif;
+    
+    background-image: url(images/tile_background.png);
+    background-repeat: repeat;   
+}
+
+/* -------------- NAV BAR ------------- */
+
+nav {
+    background-color: var(--purple);
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 120px;
+  }
+
+
+.pnav {
+    color: var(--white);
+    font-size: 2rem;
+    line-height: 100px;
+    float: left;
+    padding: 5px 5px;
+}
+
+@media screen and (max-width: 414px) {
+    .pnav{
+         display: none;
+    }
+ }
+
+nav ul {
+    float: left;
+}
+
+nav ul li {
+    float: left;
+    list-style: none;
+    position: relative;
+}
+
+nav ul li a {
+    color: var(--white);
+    font-size: 1.5rem;
+    padding: 40px 14px;
+    display: block;
+    text-decoration: none;
+
+    font-size: max(calc(10px + 1vw), 14px);     /*change*/
+    padding: 40px max(calc(2px + 1vw), 7px);    /*change*/
+   }
+
+
+nav ul li ul {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+    position: absolute;
+    background-color: var(--purple);
+    padding: 5px;
+    border-radius: 0px 0px 4px 4px ;
+}
+nav ul li:hover ul  {
+    visibility: visible;
+    opacity: 1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+    transition: all 0.4s ease;
+}
+nav ul li ul li {
+    width: 100%;
+    border-radius: 4px;
+    
+}
+nav ul li ul li a {
+    padding: 10px 20px;
+}
+nav ul li ul li a:hover {
+    background-color: rgba(249, 249, 248, 0.25);
+    border-radius: 4px;
+    transition: all 0.4s ease;
+}
+/* Styles Main Page */
+
+.hero
+{
+	background-color: #333;
+	background-image: url(images/pc.jpg);
+	background-blend-mode: multiply;
+	background-attachment: fixed; 
+	background-size: cover;
+	color: white;
+	text-align: center;
+	padding: 25.25vh 0.025em; /*vertical height of background image*/
+}
+
+
+
+.intro
+{
+	text-align: center;
+	max-width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 80px;
+}
+
+.section-title_intro
+{
+	color:var(--clr-accent);
+	font-size: 2rem;
+}
+
+.consulting_body,.repair_body
+{
+	text-align: center;
+	max-width: 450px;
+	margin: 0rem auto;
+}
+
+.conslting-repair
+{
+	max-width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 80px;
+	display: flex;
+	flex-wrap:wrap;
+}
+
+.section-title_beratung,.section-title_repair
+{
+	color: var(--purple);
+    padding: 1rem;
+}
+
+.icon-image
+{
+	max-width:70px;
+    max-height:70px;
+}
+
+
+
+/* CONTENT */
+
+/* FOOTER */
+.foot
+{
+	max-width: 1000px;
+	display: flex;
+	justify-content: center;
+	margin-left: auto;
+	margin-right: auto;
+	color: var(--purple);
+
+}
+
+.footer-nav,.footer-social
+{
+	display: flex;
+	flex-wrap: wrap;
+	list-style: none;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+.footer-nav li
+{
+	line-height: 1.8;
+	font-size: 22px;
+	padding: 25px;
+  
+}
+
+.footer-nav li:hover
+{
+	text-decoration: underline;
+}
+
+.footer-social li
+{
+	padding: 25px;
+}
+
+
+.image
+{
+	max-width:50px;
+    max-height:50px;
+}
+
+footer a
+{
+	color: white;
+	text-decoration: none;
+}
+
+footer {
+    background-color: var(--purple);
+    margin: 0;
+    padding: 3rem;
+    min-height: 10rem;
+    color: var(--white);
+    align-items: center;
+ }
+
