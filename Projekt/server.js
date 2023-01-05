@@ -12,3 +12,7 @@ app.listen(port[2] || 8080, () => {
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build/index.html'));
 });
+
+app.get('/register', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build/index.html'));
+});
