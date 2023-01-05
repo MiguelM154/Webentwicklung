@@ -14,5 +14,5 @@ app.get('/', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'build/index.html'));
+  res.sendFile(path.resolve(__dirname, 'build/register.html'));
 });
