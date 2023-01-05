@@ -39,10 +39,11 @@ const User = mongoose.model('User', userSchema);
 
 // save data to database
 
-app.post('/register', function (req, res) {
+app.post('/new-user', function (req, res) {
   const newUser = new User({
     username: req.body.uname,
     password: req.body.psw
   });
   newUser.save();
+  res.redirect('/');
 });
