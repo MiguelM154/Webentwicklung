@@ -33,6 +33,9 @@ app.get('/login', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build/login.html'));
 });
 
+app.get('/application', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build/application.html'));
+});
 // Create Schemas for database
 
 const userSchema = {
