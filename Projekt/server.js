@@ -31,8 +31,15 @@ app.get('/register', (req, res) => {
 // Create Schemas for database
 
 const userSchema = {
-  username: String,
-  password: String
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
 };
 
 const User = mongoose.model('User', userSchema);
@@ -40,10 +47,25 @@ const User = mongoose.model('User', userSchema);
 // save data to database
 
 app.post('/new-user', function (req, res) {
-  const newUser = new User({
-    username: req.body.uname,
-    password: req.body.psw
+  User.findOne({ username: req.body.uname }, (error, user) => {
+    if (error) {
+      res.status(500).send(error);
+    } else if (user) {
+      res.send('Email already in use');
+      res.redirect('/');
+    } else {
+      const newUser = new User({
+        name: req.body.uname,
+        password: req.body.psw
+      });
+
+      newUser.save((error) => {
+        if (error) {
+          res.status(500).send(error);
+        } else {
+          res.redirect('/');
+        }
+      });
+    }
   });
-  newUser.save();
-  res.redirect('/');
 });
