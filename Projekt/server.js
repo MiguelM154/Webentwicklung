@@ -49,7 +49,7 @@ const userSchema = {
 
 const User = mongoose.model('User', userSchema);
 
-// save user to database
+// save user to database after registeration
 
 app.post('/new-user', function (req, res) {
   User.findOne({ username: req.body.username }, (error, user) => {
