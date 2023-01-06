@@ -286,3 +286,29 @@ span.psw {
   padding-top: 16px;
 }
 
+/* Login form */
+
+.login-form {
+    width: 300px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+  }
+  .login-form label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .login-form input[type="text"],
+  .login-form input[type="username"],
+  .login-form input[type="password"] {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
+  .login-form input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    cursor: pointer;
+  }

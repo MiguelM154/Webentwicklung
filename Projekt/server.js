@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 app.use(express.static('build/public'));
+app.use(express.json());
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -28,6 +29,10 @@ app.get('/register', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build/register.html'));
 });
 
+app.get('/login', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build/login.html'));
+});
+
 // Create Schemas for database
 
 const userSchema = {
@@ -44,19 +49,18 @@ const userSchema = {
 
 const User = mongoose.model('User', userSchema);
 
-// save data to database
+// save user to database
 
 app.post('/new-user', function (req, res) {
-  User.findOne({ username: req.body.uname }, (error, user) => {
+  User.findOne({ username: req.body.username }, (error, user) => {
     if (error) {
       res.status(500).send(error);
     } else if (user) {
       res.send('Email already in use');
-      res.redirect('/');
     } else {
       const newUser = new User({
-        name: req.body.uname,
-        password: req.body.psw
+        username: req.body.username,
+        password: req.body.password
       });
 
       newUser.save((error) => {
@@ -66,6 +70,20 @@ app.post('/new-user', function (req, res) {
           res.redirect('/');
         }
       });
+    }
+  });
+});
+
+// login to app
+
+app.post('/login', (req, res) => {
+  User.findOne({ username: req.body.username, password: req.body.password }, (error, user) => {
+    if (error) {
+      res.status(500).send(error);
+    } else if (user) {
+      res.send('Login successful');
+    } else {
+      res.send('Email or password is incorrect');
     }
   });
 });
