@@ -90,3 +90,115 @@ app.post('/login', (req, res) => {
     }
   });
 });
+
+// create Schema of tables for restaurant
+
+const tableSchema = {
+  reserved: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  number: {
+    type: Number,
+    required: true,
+    unique: true
+  },
+  availability: {
+    type: Boolean,
+    required: true
+  },
+  seatNumber: {
+    type: Number,
+    required: true
+  }
+};
+
+const Table = mongoose.model('Table', tableSchema);
+
+const tableRest1 = new Table({
+  number: 1,
+  availability: true,
+  seatNumber: 4
+});
+
+const tableRest2 = new Table({
+  number: 2,
+  availability: true,
+  seatNumber: 4
+});
+
+const tableRest3 = new Table({
+  number: 3,
+  availability: true,
+  seatNumber: 2
+});
+
+const tableRest4 = new Table({
+  number: 4,
+  availability: true,
+  seatNumber: 2
+});
+
+Table.findOne({ number: tableRest1.number }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Table 1 already created');
+  } else {
+    tableRest1.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Table 1 saved');
+      }
+    });
+  }
+});
+
+Table.findOne({ number: tableRest2.number }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Table 2 already created');
+  } else {
+    tableRest1.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Table 2 saved');
+      }
+    });
+  }
+});
+
+Table.findOne({ number: tableRest3.number }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Table 3 already created');
+  } else {
+    tableRest1.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Table 3 saved');
+      }
+    });
+  }
+});
+
+Table.findOne({ number: tableRest4.number }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Table 4 already created');
+  } else {
+    tableRest1.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Table 4 saved');
+      }
+    });
+  }
+});
