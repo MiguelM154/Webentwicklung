@@ -36,6 +36,11 @@ app.get('/login', (req, res) => {
 app.get('/application', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build/application.html'));
 });
+
+app.get('/event', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build/event_app.html'));
+});
+
 // Create Schemas for database
 
 const userSchema = {
@@ -348,13 +353,14 @@ const guestSchema = new mongoose.Schema({
     enum: ['Invited', 'Confirmed', 'Declined', 'Attended']
   },
   seatNumber: {
-    type: Number
+    table: Number,
+    seat: Number
   }
 });
 
-const Guest = mongoose.model('Guest', guestSchema);
+// const Guest = mongoose.model('Guest', guestSchema);
 
-//create Schema event
+// create Schema event
 
 const eventSchema = new mongoose.Schema({
   name: {
@@ -363,12 +369,56 @@ const eventSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    required: true
+    required: true,
+    unique: true
   },
-  guests: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Guest'
-  }]
+  guests: [guestSchema]
 });
 
 const Event = mongoose.model('Event', eventSchema);
+
+const newEvent1 = new Event({
+  name: 'Wedding Anniversary',
+  date: new Date('2023-06-15'),
+  guests: [],
+  seatingPlan: []
+});
+
+const newEvent2 = new Event({
+  name: 'Wedding Anniversary',
+  date: new Date('2023-06-15'),
+  guests: [],
+  seatingPlan: []
+});
+
+Event.findOne({ date: newEvent1.date }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Event 1 already created');
+  } else {
+    newEvent1.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Event 1 saved');
+      }
+    });
+  }
+});
+
+Event.findOne({ date: newEvent2.date }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Event 2 already created');
+  } else {
+    newEvent2.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Event 2 saved');
+      }
+    });
+  }
+});

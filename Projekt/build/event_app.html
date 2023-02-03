@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <style>
+      .calendar {
+        display: flex;
+        flex-wrap: wrap;
+        width: 350px;
+      }
+      .day {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        border: 1px solid black;
+        cursor: pointer;
+      }
+      .unavailable {
+        background-color: lightgray;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="calendar"></div>
+    <script>
+      const unavailableDates = [3, 5, 9];
+      const calendar = document.getElementById("calendar");
+      for (let i = 1; i <= 31; i++) {
+        let day = document.createElement("div");
+        day.classList.add("day");
+        if (unavailableDates.includes(i)) {
+          day.classList.add("unavailable");
+        }
+        day.innerHTML = i;
+        calendar.appendChild(day);
+      }
+    </script>
+  </body>
+</html>
