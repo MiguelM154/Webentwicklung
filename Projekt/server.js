@@ -133,6 +133,15 @@ const RoomSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  isReserved: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  reservedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   tables: [tableSchema]
 });
 
@@ -171,27 +180,27 @@ const room1 = new Room({
 
 const room2 = new Room({
   name: 'Room 2',
-  number: 1,
+  number: 2,
   description: 'A spacious room with natural light.',
   capacity: 30,
   tables: [
     {
-      number: 1,
+      number: 5,
       availability: true,
       seatNumber: 4
     },
     {
-      number: 2,
+      number: 6,
       availability: true,
       seatNumber: 4
     },
     {
-      number: 3,
+      number: 7,
       availability: true,
       seatNumber: 2
     },
     {
-      number: 4,
+      number: 8,
       availability: true,
       seatNumber: 2
     }
@@ -200,27 +209,27 @@ const room2 = new Room({
 
 const room3 = new Room({
   name: 'Room 3',
-  number: 1,
+  number: 3,
   description: 'A spacious room with natural light.',
   capacity: 30,
   tables: [
     {
-      number: 1,
+      number: 9,
       availability: true,
       seatNumber: 4
     },
     {
-      number: 2,
+      number: 10,
       availability: true,
       seatNumber: 4
     },
     {
-      number: 3,
+      number: 11,
       availability: true,
       seatNumber: 2
     },
     {
-      number: 4,
+      number: 12,
       availability: true,
       seatNumber: 2
     }
@@ -229,27 +238,27 @@ const room3 = new Room({
 
 const room4 = new Room({
   name: 'Room 4',
-  number: 1,
+  number: 4,
   description: 'A spacious room with natural light.',
   capacity: 30,
   tables: [
     {
-      number: 1,
+      number: 13,
       availability: true,
       seatNumber: 4
     },
     {
-      number: 2,
+      number: 14,
       availability: true,
       seatNumber: 4
     },
     {
-      number: 3,
+      number: 15,
       availability: true,
       seatNumber: 2
     },
     {
-      number: 4,
+      number: 16,
       availability: true,
       seatNumber: 2
     }
@@ -321,3 +330,45 @@ Room.findOne({ number: room4.number }, (error, exists) => {
     });
   }
 });
+
+// create Schema guest
+
+const guestSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ['Invited', 'Confirmed', 'Declined', 'Attended']
+  },
+  seatNumber: {
+    type: Number
+  }
+});
+
+const Guest = mongoose.model('Guest', guestSchema);
+
+//create Schema event
+
+const eventSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
+  guests: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Guest'
+  }]
+});
+
+const Event = mongoose.model('Event', eventSchema);
