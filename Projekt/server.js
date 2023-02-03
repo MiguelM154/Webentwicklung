@@ -202,3 +202,212 @@ Table.findOne({ number: tableRest4.number }, (error, exists) => {
     });
   }
 });
+
+// Schema rooms where people can rent one or more for all sort of activities
+
+const RoomSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  number: {
+    type: Number,
+    required: true,
+    unique: true
+  },
+  description: {
+    type: String,
+    default: ''
+  },
+  capacity: {
+    type: Number,
+    required: true
+  },
+  tables: [tableSchema]
+});
+
+const Room = mongoose.model('Room', RoomSchema);
+
+// create rooms with tables
+
+const room1 = new Room({
+  name: 'Room 1',
+  number: 1,
+  description: 'A spacious room with natural light.',
+  capacity: 30,
+  tables: [
+    {
+      number: 1,
+      availability: true,
+      seatNumber: 4
+    },
+    {
+      number: 2,
+      availability: true,
+      seatNumber: 4
+    },
+    {
+      number: 3,
+      availability: true,
+      seatNumber: 2
+    },
+    {
+      number: 4,
+      availability: true,
+      seatNumber: 2
+    }
+  ]
+});
+
+const room2 = new Room({
+  name: 'Room 1',
+  number: 1,
+  description: 'A spacious room with natural light.',
+  capacity: 30,
+  tables: [
+    {
+      number: 1,
+      availability: true,
+      seatNumber: 4
+    },
+    {
+      number: 2,
+      availability: true,
+      seatNumber: 4
+    },
+    {
+      number: 3,
+      availability: true,
+      seatNumber: 2
+    },
+    {
+      number: 4,
+      availability: true,
+      seatNumber: 2
+    }
+  ]
+});
+
+const room3 = new Room({
+  name: 'Room 1',
+  number: 1,
+  description: 'A spacious room with natural light.',
+  capacity: 30,
+  tables: [
+    {
+      number: 1,
+      availability: true,
+      seatNumber: 4
+    },
+    {
+      number: 2,
+      availability: true,
+      seatNumber: 4
+    },
+    {
+      number: 3,
+      availability: true,
+      seatNumber: 2
+    },
+    {
+      number: 4,
+      availability: true,
+      seatNumber: 2
+    }
+  ]
+});
+
+const room4 = new Room({
+  name: 'Room 1',
+  number: 1,
+  description: 'A spacious room with natural light.',
+  capacity: 30,
+  tables: [
+    {
+      number: 1,
+      availability: true,
+      seatNumber: 4
+    },
+    {
+      number: 2,
+      availability: true,
+      seatNumber: 4
+    },
+    {
+      number: 3,
+      availability: true,
+      seatNumber: 2
+    },
+    {
+      number: 4,
+      availability: true,
+      seatNumber: 2
+    }
+  ]
+});
+
+// see if rooms are already on database
+
+Room.findOne({ number: room1.number }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Room 1 already created');
+  } else {
+    room1.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Room 1 saved');
+      }
+    });
+  }
+});
+
+Room.findOne({ number: room2.number }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Room 2 already created');
+  } else {
+    room2.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Room 2 saved');
+      }
+    });
+  }
+});
+
+Room.findOne({ number: room3.number }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Room 3 already created');
+  } else {
+    room3.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Room 3 saved');
+      }
+    });
+  }
+});
+
+Room.findOne({ number: room4.number }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Room 4 already created');
+  } else {
+    room4.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Room 4 saved');
+      }
+    });
+  }
+});
