@@ -113,96 +113,6 @@ const tableSchema = {
   }
 };
 
-const Table = mongoose.model('Table', tableSchema);
-
-const tableRest1 = new Table({
-  number: 1,
-  availability: true,
-  seatNumber: 4
-});
-
-const tableRest2 = new Table({
-  number: 2,
-  availability: true,
-  seatNumber: 4
-});
-
-const tableRest3 = new Table({
-  number: 3,
-  availability: true,
-  seatNumber: 2
-});
-
-const tableRest4 = new Table({
-  number: 4,
-  availability: true,
-  seatNumber: 2
-});
-
-Table.findOne({ number: tableRest1.number }, (error, exists) => {
-  if (error) {
-    console.log(error);
-  } else if (exists) {
-    console.log('Table 1 already created');
-  } else {
-    tableRest1.save((error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Table 1 saved');
-      }
-    });
-  }
-});
-
-Table.findOne({ number: tableRest2.number }, (error, exists) => {
-  if (error) {
-    console.log(error);
-  } else if (exists) {
-    console.log('Table 2 already created');
-  } else {
-    tableRest1.save((error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Table 2 saved');
-      }
-    });
-  }
-});
-
-Table.findOne({ number: tableRest3.number }, (error, exists) => {
-  if (error) {
-    console.log(error);
-  } else if (exists) {
-    console.log('Table 3 already created');
-  } else {
-    tableRest1.save((error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Table 3 saved');
-      }
-    });
-  }
-});
-
-Table.findOne({ number: tableRest4.number }, (error, exists) => {
-  if (error) {
-    console.log(error);
-  } else if (exists) {
-    console.log('Table 4 already created');
-  } else {
-    tableRest1.save((error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Table 4 saved');
-      }
-    });
-  }
-});
-
 // Schema rooms where people can rent one or more for all sort of activities
 
 const RoomSchema = new mongoose.Schema({
@@ -260,7 +170,7 @@ const room1 = new Room({
 });
 
 const room2 = new Room({
-  name: 'Room 1',
+  name: 'Room 2',
   number: 1,
   description: 'A spacious room with natural light.',
   capacity: 30,
@@ -289,7 +199,7 @@ const room2 = new Room({
 });
 
 const room3 = new Room({
-  name: 'Room 1',
+  name: 'Room 3',
   number: 1,
   description: 'A spacious room with natural light.',
   capacity: 30,
@@ -318,7 +228,7 @@ const room3 = new Room({
 });
 
 const room4 = new Room({
-  name: 'Room 1',
+  name: 'Room 4',
   number: 1,
   description: 'A spacious room with natural light.',
   capacity: 30,
