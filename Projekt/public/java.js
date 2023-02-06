@@ -1,30 +1,41 @@
-const jsonData = '{"people": [{"Name": "John Doe", "Age": 35, "City": "New York"},{"Name": "Jane Doe", "Age": 32, "City": "San Francisco"}]}';
-const data = JSON.parse(jsonData);
 const table = document.getElementById('data-table');
 
+console.log('test');
+
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://localhost/occasionDB';
-
-MongoClient.connect(url, function (err, db) {
-  if (err) throw err;
-  const dbo = db.db('occasionDB');
-  dbo.collection('Users').find({}).toArray(function (err, result) {
-    if (err) throw err;
-    const jsonData = JSON.stringify(result);
-    console.log(jsonData);
-    db.close();
-  });
-});
-
-for (let i = 0; i < data.people.length; i++) {
-  const person = data.people[i];
-
+const uri = 'mongodb://localhost:27017/';
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(() => {
   const row = table.insertRow();
   const nameCell = row.insertCell(0);
   const ageCell = row.insertCell(1);
   const cityCell = row.insertCell(2);
+  nameCell.innerHTML = 'test';
+  ageCell.innerHTML = 'test';
+  cityCell.innerHTML = 'test';
+  const db = client.db('occassionDB');
+  const collection = db.collection('Event');
+  collection.find({}).toArray((err, data) => {
+    if (err) return console.error(err);
+    const jsonData = JSON.stringify(data);
+    console.log(jsonData);
+    client.close();
+  });
+});
 
-  nameCell.innerHTML = person.Name;
-  ageCell.innerHTML = person.Age;
-  cityCell.innerHTML = person.City;
-}
+/* Event.findOne({}).toArray(function (err, result) {
+  if (err) throw err;
+  const data = JSON.stringify(result);
+  console.log(data);
+  for (let i = 0; i < data.Event.length; i++) {
+    console.log('test');
+    const person = data.Event[i];
+    const row = table.insertRow();
+    const nameCell = row.insertCell(0);
+    const ageCell = row.insertCell(1);
+    const cityCell = row.insertCell(2);
+    nameCell.innerHTML = person.Name;
+    ageCell.innerHTML = person.date;
+    cityCell.innerHTML = person.reserved;
+  }
+}); */
