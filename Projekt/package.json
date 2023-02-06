@@ -5,9 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "minifyJS": "esbuild public/java.js --bundle --minify --outfile=build/public/java.js",
-    "minifyCSS": "esbuild public/style.css --minify --outfile=build/public/style.css",
-    "debug-files": "esbuild public/java.js --bundle --outfile=build/public/java.js && esbuild public/style.css --outfile=build/public/style.css",
+    "minifyJS": "esbuild public/java.js --bundle --platform=node --minify --outfile=build/public/java.js",
+    "minifyCSS": "esbuild public/style.css --minify --platform=node --outfile=build/public/style.css",
+    "debug-files": "esbuild public/java.js --bundle --platform=node --outfile=build/public/java.js && esbuild public/style.css --outfile=build/public/style.css",
     "clean": "rm -f build/public/style.css && rm -f build/public/java.js && rm -f package-lock.json && rm -r node_modules",
     "build": "npm run minifyJS && npm run minifyCSS && npm run lint",
     "debug": "npm run debug-files && npm run lint",

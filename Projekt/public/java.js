@@ -2,15 +2,15 @@ const jsonData = '{"people": [{"Name": "John Doe", "Age": 35, "City": "New York"
 const data = JSON.parse(jsonData);
 const table = document.getElementById('data-table');
 
-var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://localhost/occasionDB';
+const MongoClient = require('mongodb').MongoClient;
+const url = 'mongodb://localhost/occasionDB';
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, function (err, db) {
   if (err) throw err;
-  var dbo = db.db('occasionDB');
-  dbo.collection('Users').find({}).toArray(function(err, result) {
+  const dbo = db.db('occasionDB');
+  dbo.collection('Users').find({}).toArray(function (err, result) {
     if (err) throw err;
-    var jsonData = JSON.stringify(result);
+    const jsonData = JSON.stringify(result);
     console.log(jsonData);
     db.close();
   });
