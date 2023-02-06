@@ -1,39 +1,90 @@
-<html>
-  <head>
-    <style>
-      .calendar {
-        display: flex;
-        flex-wrap: wrap;
-        width: 350px;
-      }
-      .day {
-        width: 50px;
-        height: 50px;
-        text-align: center;
-        line-height: 50px;
-        border: 1px solid black;
-        cursor: pointer;
-      }
-      .unavailable {
-        background-color: lightgray;
-        cursor: not-allowed;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="calendar"></div>
-    <script>
-      const unavailableDates = [3, 5, 9];
-      const calendar = document.getElementById("calendar");
-      for (let i = 1; i <= 31; i++) {
-        let day = document.createElement("div");
-        day.classList.add("day");
-        if (unavailableDates.includes(i)) {
-          day.classList.add("unavailable");
-        }
-        day.innerHTML = i;
-        calendar.appendChild(day);
-      }
-    </script>
-  </body>
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>True IT GmbH</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" media="screen">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul class="navbar">
+                <li class="navitem"><a href="#">Produkte</a>
+                    <ul>
+                        <li class="dropdown"><a href="drucksysteme.html">Drucksysteme</a></li>
+                        <li class="dropdown"><a href="endgeraete.html">Endgeräte</a></li>
+                        <li class="dropdown"><a href="rechner.html">Rechner</a></li>
+                    </ul>
+                </li>
+
+                <li class="navitem"><a href="#">Über uns</a>
+                    <ul>
+                        <li class="dropdown"><a href="team.html">Team</a></li>
+                        <li class="dropdown"><a href="kontakt.html">Kontakt</a></li>
+                        <li class="dropdown"><a href="impressum.html">Impressum</a></li>
+
+                    </ul>
+                </li>
+
+                <li class="navitem"><a href="#">Karriere</a>
+                    <ul>
+                        <li class="dropdown"><a href="application">Bewerben!</a></li>
+                    </ul>
+                </li>
+
+                <li class="navitem"><a href="#">Anmeldung</a>
+                    <ul>
+                        <li class="dropdown"><a href="login">Login</a></li>
+                        <li class="dropdown"><a href="register">Registrierung</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </nav>
+    </header>
+
+    <!--    Content Anfang   -->
+
+    <table id="data-table">
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>City</th>
+      </tr>
+    </table>
+
+    <script src="java.js"></script>
+    <!--    Content Ende    -->
+
+    <footer>
+        <div class="foot">
+            <ul class="footer-nav">
+
+                <li><a href="#">Home</a></li>
+                <li><a href="team.html">Über uns</a></li>
+                <li><a href="kontakt.html">Kontakt</a></li>
+                <li><a href="endgeraete.html">Produkte</a></li>
+
+            </ul>
+            <br />
+            <ul class="footer-social">
+                <li>
+                    <a href="#"><img src="images/facebook.png" alt="Facebook" class="image"></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/twitter.png" alt="Twitter" class="image"></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/instagram.png" alt="instagram" class="image"></a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+</body>
+
 </html>

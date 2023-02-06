@@ -4,7 +4,10 @@ const app = express();
 const path = require('path');
 const port = process.argv;
 const mongoose = require('mongoose');
+const ObjectId = require('mongodb').ObjectId;
 const bodyParser = require('body-parser');
+
+const session = require('express-session');
 
 app.use(express.static('build/public'));
 app.use(express.json());
@@ -18,6 +21,14 @@ mongoose.connect('mongodb://localhost:27017');
 app.listen(port[2] || 8080, () => {
 
 });
+
+// create Session
+
+app.use(session({
+  secret: 'secret-key',
+  resave: false,
+  saveUninitialized: true
+}));
 
 // Access to each page
 
@@ -37,11 +48,7 @@ app.get('/application', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build/application.html'));
 });
 
-app.get('/event', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'build/event_app.html'));
-});
-
-// Create Schemas for database
+// Create user Schema for database
 
 const userSchema = {
   username: {
@@ -89,9 +96,22 @@ app.post('/login', (req, res) => {
     if (error) {
       res.status(500).send(error);
     } else if (user) {
-      res.send('Login successful');
+      req.session.userId = user._id;
+      res.redirect('/');
     } else {
-      res.send('Email or password is incorrect');
+      res.redirect('/login');
+    }
+  });
+});
+
+// authenticate user to get to event
+
+app.get('/event', (req, res) => {
+  User.findById(req.session.userId, (error, user) => {
+    if (error || !user) {
+      return res.redirect('/');
+    } else {
+      res.sendFile(path.resolve(__dirname, 'build/event_app.html'));
     }
   });
 });
@@ -99,10 +119,6 @@ app.post('/login', (req, res) => {
 // create Schema of tables for restaurant
 
 const tableSchema = {
-  reserved: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
   number: {
     type: Number,
     required: true,
@@ -372,6 +388,14 @@ const eventSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  roomNumber: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Room'
+  },
+  reserved: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   guests: [guestSchema]
 });
 
@@ -380,13 +404,15 @@ const Event = mongoose.model('Event', eventSchema);
 const newEvent1 = new Event({
   name: 'Wedding Anniversary',
   date: new Date('2023-06-15'),
+  roomNumber: ObjectId('63dd7ecc9812bd5a6cfe495e'),
   guests: [],
   seatingPlan: []
 });
 
 const newEvent2 = new Event({
-  name: 'Wedding Anniversary',
-  date: new Date('2023-06-15'),
+  name: 'Wedding Anniversary for Joe',
+  date: new Date('2023-06-16'),
+  roomNumber: ObjectId('63dd7ecc9812bd5a6cfe4959'),
   guests: [],
   seatingPlan: []
 });
@@ -395,7 +421,7 @@ Event.findOne({ date: newEvent1.date }, (error, exists) => {
   if (error) {
     console.log(error);
   } else if (exists) {
-    console.log('Event 1 already created');
+    console.log('Event already created on that day');
   } else {
     newEvent1.save((error) => {
       if (error) {
@@ -411,7 +437,7 @@ Event.findOne({ date: newEvent2.date }, (error, exists) => {
   if (error) {
     console.log(error);
   } else if (exists) {
-    console.log('Event 2 already created');
+    console.log('Event 2 already created on that day');
   } else {
     newEvent2.save((error) => {
       if (error) {
@@ -420,5 +446,16 @@ Event.findOne({ date: newEvent2.date }, (error, exists) => {
         console.log('Event 2 saved');
       }
     });
+  }
+});
+
+// test ground for after
+
+const objectId = new ObjectId('63dd81e8ee30441365a8a48c');
+Event.findOne({ objectId }, (err, doc) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(doc);
   }
 });

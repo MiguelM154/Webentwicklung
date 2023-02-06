@@ -38,7 +38,12 @@ body {
     font-family: 'Archivo', sans-serif;
     
     background-image: url(images/tile_background.png);
-    background-repeat: repeat;   
+    background-repeat: repeat;
+
+    min-height: 100vh;
+
+    display:flex;
+    flex-direction: column;
 }
 
 /* -------------- NAV BAR ------------- */
@@ -189,7 +194,6 @@ nav ul li ul li a:hover {
 	margin-left: auto;
 	margin-right: auto;
 	color: var(--purple);
-
 }
 
 .footer-nav,.footer-social
@@ -236,11 +240,10 @@ footer a
 
 footer {
     background-color: var(--purple);
-    margin: 0;
-    padding: 3rem;
-    min-height: 10rem;
     color: var(--white);
     align-items: center;
+    margin-top: auto;
+    height: 125px;
  }
 
 
@@ -334,4 +337,21 @@ span.psw {
   }
   .menu li a:hover {
     background-color: #111;
+  }
+
+  /* event table */
+
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  th {
+    background-color: #dddddd;
+    font-weight: bold;
   }
