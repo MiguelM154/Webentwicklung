@@ -1,4 +1,3 @@
-
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -16,7 +15,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-mongoose.connect('mongodb://localhost:27017');
+mongoose.connect('mongodb://localhost/occassionDB', {useNewUrlParser: true});
 
 app.listen(port[2] || 8080, () => {
 
