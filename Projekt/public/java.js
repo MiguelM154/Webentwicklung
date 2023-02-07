@@ -1,4 +1,28 @@
-const table = document.getElementById('data-table');
+function getData () {
+  fetch('/api/data')
+    .then((res) => res.json())
+    .then((res) => {
+      const stringifiedObject = JSON.stringify(res);
+      const objects = JSON.parse(stringifiedObject);
+      console.log(objects.events[0].name);
+      /*
+        const table = document.getElementById('data-table');
+        for (let i = 0; i < response.length; i++) {
+          const row = table.insertRow();
+          const cell1 = row.insertCell(0);
+          const cell2 = row.insertCell(1);
+          const cell3 = row.insertCell(3);
+          console.log('test');
+          cell1.innerHTML = 'test';
+          cell2.innerHTML = response[i].date;
+          cell3.innerHTML = response[i].roomNumber;
+        } */
+    }
+    );
+}
+getData();
+
+/* const table = document.getElementById('data-table');
 
 console.log('test');
 
@@ -23,7 +47,7 @@ client.connect(() => {
   });
 });
 
-/* Event.findOne({}).toArray(function (err, result) {
+Event.findOne({}).toArray(function (err, result) {
   if (err) throw err;
   const data = JSON.stringify(result);
   console.log(data);

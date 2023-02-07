@@ -63,7 +63,7 @@ const userSchema = {
 
 const User = mongoose.model('User', userSchema);
 
-// save user to database after registeration
+// save user to database after registration
 
 app.post('/new-user', function (req, res) {
   User.findOne({ username: req.body.username }, (error, user) => {
@@ -111,6 +111,19 @@ app.get('/event', (req, res) => {
       return res.redirect('/');
     } else {
       res.sendFile(path.resolve(__dirname, 'build/event_app.html'));
+    }
+  });
+});
+
+// get event data to table
+
+app.get('/api/data', (req, res) => {
+  Event.find({}, function (err, events) {
+    if (err) {
+      return console.error(err);
+    } else {
+      console.log(events);
+      res.json({ events });
     }
   });
 });
