@@ -1,26 +1,53 @@
 function getData () {
-  fetch('/api/data')
+  fetch('/api/dataEvent')
     .then((res) => res.json())
     .then((res) => {
       const stringifiedObject = JSON.stringify(res);
       const objects = JSON.parse(stringifiedObject);
-      console.log(objects.events[0].name);
-      /*
-        const table = document.getElementById('data-table');
-        for (let i = 0; i < response.length; i++) {
-          const row = table.insertRow();
-          const cell1 = row.insertCell(0);
-          const cell2 = row.insertCell(1);
-          const cell3 = row.insertCell(3);
-          console.log('test');
-          cell1.innerHTML = 'test';
-          cell2.innerHTML = response[i].date;
-          cell3.innerHTML = response[i].roomNumber;
-        } */
+      const table = document.getElementById('data-event');
+      for (let i = 0; i < objects.filteredEvents.length; i++) {
+        const row = table.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+        cell1.innerHTML = objects.filteredEvents[i].name;
+        cell2.innerHTML = objects.filteredEvents[i].date;
+        cell3.innerHTML = objects.filteredEvents[i].roomNumber;
+      }
     }
     );
 }
 getData();
+
+function getDataGuest () {
+  fetch('/api/dataEvent')
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+      const stringifiedObject = JSON.stringify(res);
+      console.log(stringifiedObject);
+      const objects = JSON.parse(stringifiedObject);
+      console.log(objects);
+      const table = document.getElementById('data-guest');
+      for (let i = 0; i < objects.filteredEvents.length; i++) {
+        for (let g = 0; g < objects.filteredEvents[i].guests.length; g++) {
+          const row = table.insertRow();
+          const cell1 = row.insertCell(0);
+          const cell2 = row.insertCell(1);
+          const cell3 = row.insertCell(2);
+          const cell4 = row.insertCell(3);
+          const cell5 = row.insertCell(4);
+          cell1.innerHTML = objects.filteredEvents[i].name;
+          cell2.innerHTML = objects.filteredEvents[i].guests[g].name;
+          cell3.innerHTML = objects.filteredEvents[i].guests[g].status;
+          cell4.innerHTML = objects.filteredEvents[i].guests[g].seatNumber;
+          cell5.innerHTML = objects.filteredEvents[i].guests[g].email;
+        }
+      }
+    }
+    );
+}
+getDataGuest();
 
 /* const table = document.getElementById('data-table');
 

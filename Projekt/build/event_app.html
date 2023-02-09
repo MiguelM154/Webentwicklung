@@ -51,13 +51,29 @@
 
     <!--    Content Anfang   -->
 
-    <table id="data-table" onload="getData()">
-      <tr>
+    <table id="data-event" onload="getData()">
+    <tr>
+        <th>Events</th>
+    </tr>
+    <tr>
         <th>Name</th>
         <th>Datum</th>
         <th>Raum</th>
-      </tr>
+    </tr>
     </table>
+    <br></br>
+    <table id="data-guest" onload="getDataGuest()">
+        <tr>
+            <th>Guests</th>
+        </tr>
+        <tr>
+          <th>Event</th>
+          <th>Guest Name</th>
+          <th>Status</th>
+          <th>Seat Number</th>
+          <th>Email</th>
+        </tr>
+      </table>
     <!--    Content Ende    -->
 
     <footer>

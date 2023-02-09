@@ -96,6 +96,7 @@ app.post('/login', (req, res) => {
       res.status(500).send(error);
     } else if (user) {
       req.session.userId = user._id;
+      console.log(req.session.userId);
       res.redirect('/');
     } else {
       res.redirect('/login');
@@ -117,13 +118,15 @@ app.get('/event', (req, res) => {
 
 // get event data to table
 
-app.get('/api/data', (req, res) => {
+app.get('/api/dataEvent', (req, res) => {
   Event.find({}, function (err, events) {
     if (err) {
       return console.error(err);
     } else {
-      console.log(events);
-      res.json({ events });
+      const filteredEvents = events.filter(function (obj) {
+        return (String(obj.reserved) === String(req.session.userId));
+      });
+      res.json({ filteredEvents });
     }
   });
 });
@@ -417,15 +420,55 @@ const newEvent1 = new Event({
   name: 'Wedding Anniversary',
   date: new Date('2023-06-15'),
   roomNumber: ObjectId('63dd7ecc9812bd5a6cfe495e'),
-  guests: [],
+  reserved: ObjectId('63e14d0c6d595641998c3bf1'),
+  guests: [
+    {
+      name: 'person1',
+      email: 'email@g.com',
+      status: 'Invited',
+      seatNumber: 1
+    },
+    {
+      name: 'person2',
+      email: 'emailh@g.com',
+      status: 'Invited',
+      seatNumber: 2
+    },
+    {
+      name: 'person3',
+      email: 'email@g.com',
+      status: 'Invited',
+      seatNumber: 3
+    }
+  ],
   seatingPlan: []
 });
 
 const newEvent2 = new Event({
   name: 'Wedding Anniversary for Joe',
   date: new Date('2023-06-16'),
+  reserved: ObjectId('63e4243416c203cb388945e3'),
   roomNumber: ObjectId('63dd7ecc9812bd5a6cfe4959'),
-  guests: [],
+  guests: [
+    {
+      name: 'person1',
+      email: 'email@g.com',
+      status: 'Invited',
+      seatNumber: 1
+    },
+    {
+      name: 'person2',
+      email: 'emailh@g.com',
+      status: 'Invited',
+      seatNumber: 2
+    },
+    {
+      name: 'person3',
+      email: 'email@g.com',
+      status: 'Invited',
+      seatNumber: 3
+    }
+  ],
   seatingPlan: []
 });
 
