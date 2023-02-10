@@ -52,9 +52,7 @@
     <!--    Content Anfang   -->
 
     <table id="data-event" onload="getData()">
-    <tr>
         <th>Events</th>
-    </tr>
     <tr>
         <th>Name</th>
         <th>Datum</th>
@@ -63,17 +61,60 @@
     </table>
     <br></br>
     <table id="data-guest" onload="getDataGuest()">
-        <tr>
             <th>Guests</th>
-        </tr>
         <tr>
           <th>Event</th>
           <th>Guest Name</th>
           <th>Status</th>
-          <th>Seat Number</th>
           <th>Email</th>
         </tr>
       </table>
+      <br></br>
+    <table id="data-table" onload="getDataTables()">
+        <th>Table Placement</th>
+        <tr>
+          <th>Guest Name</th>
+          <th>Table</th>
+          <th>Seat</th>
+        </tr>
+      </table>
+      <br></br>
+      <div class="container">
+        <form action="action_page.php" onload="getEventOptions()">
+      
+          <label for="fname">Guest First Name</label>
+          <input type="text" id="gname" name="gname" placeholder="Name..">
+      
+          <label for="lname">Guest Email</label>
+          <input type="text" id="gemail" name="gemail" placeholder="Email..">
+
+          <label for="status">Status</label>
+            <select id="status" name="status">
+            <option value="invited">Invited</option>
+            <option value="declined">Declined</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="attended">Attended</option>
+            </select>
+
+            <label for="guestevent">Event</label>
+            <select id="guestevent" name="guestevent">
+
+            </select>
+
+            <label for="seatTable">Table</label>
+            <select id="seatTable" name="seatTable">
+
+            </select>
+
+            <label for="seatSeat">Seat</label>
+            <select id="seatSeat" name="seatSeat">
+                
+            </select>
+      
+          <input type="submit" value="Submit">
+      
+        </form>
+      </div>
     <!--    Content Ende    -->
 
     <footer>

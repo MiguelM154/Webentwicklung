@@ -126,10 +126,18 @@ app.get('/api/dataEvent', (req, res) => {
       const filteredEvents = events.filter(function (obj) {
         return (String(obj.reserved) === String(req.session.userId));
       });
-      res.json({ filteredEvents });
+      Room.find({}, (error, rooms) => {
+        if (error) {
+          console.log(error);
+        } else {
+          res.json({ filteredEvents, rooms });
+        }
+      });
     }
   });
 });
+
+// get rooms and event data to table
 
 // create Schema of tables for restaurant
 
@@ -139,11 +147,7 @@ const tableSchema = {
     required: true,
     unique: true
   },
-  availability: {
-    type: Boolean,
-    required: true
-  },
-  seatNumber: {
+  seatsAvailable: {
     type: Number,
     required: true
   }
@@ -169,14 +173,13 @@ const RoomSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  isReserved: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
   reservedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  numberOfTables: {
+    type: Number,
+    required: true
   },
   tables: [tableSchema]
 });
@@ -190,26 +193,22 @@ const room1 = new Room({
   number: 1,
   description: 'A spacious room with natural light.',
   capacity: 30,
+  numberOfTables: 4,
   tables: [
     {
       number: 1,
       availability: true,
-      seatNumber: 4
+      seatsAvailable: 4
     },
     {
       number: 2,
       availability: true,
-      seatNumber: 4
+      seatsAvailable: 4
     },
     {
       number: 3,
       availability: true,
-      seatNumber: 2
-    },
-    {
-      number: 4,
-      availability: true,
-      seatNumber: 2
+      seatsAvailable: 2
     }
   ]
 });
@@ -219,26 +218,27 @@ const room2 = new Room({
   number: 2,
   description: 'A spacious room with natural light.',
   capacity: 30,
+  numberOfTables: 4,
   tables: [
     {
       number: 5,
       availability: true,
-      seatNumber: 4
+      seatsAvailable: 4
     },
     {
       number: 6,
       availability: true,
-      seatNumber: 4
+      seatsAvailable: 4
     },
     {
       number: 7,
       availability: true,
-      seatNumber: 2
+      seatsAvailable: 2
     },
     {
       number: 8,
       availability: true,
-      seatNumber: 2
+      seatsAvailable: 2
     }
   ]
 });
@@ -248,26 +248,27 @@ const room3 = new Room({
   number: 3,
   description: 'A spacious room with natural light.',
   capacity: 30,
+  numberOfTables: 4,
   tables: [
     {
       number: 9,
       availability: true,
-      seatNumber: 4
+      seatsAvailable: 4
     },
     {
       number: 10,
       availability: true,
-      seatNumber: 4
+      seatsAvailable: 4
     },
     {
       number: 11,
       availability: true,
-      seatNumber: 2
+      seatsAvailable: 2
     },
     {
       number: 12,
       availability: true,
-      seatNumber: 2
+      seatsAvailable: 2
     }
   ]
 });
@@ -277,26 +278,27 @@ const room4 = new Room({
   number: 4,
   description: 'A spacious room with natural light.',
   capacity: 30,
+  numberOfTables: 4,
   tables: [
     {
       number: 13,
       availability: true,
-      seatNumber: 4
+      seatsAvailable: 4
     },
     {
       number: 14,
       availability: true,
-      seatNumber: 4
+      seatsAvailable: 4
     },
     {
       number: 15,
       availability: true,
-      seatNumber: 2
+      seatsAvailable: 2
     },
     {
       number: 16,
       availability: true,
-      seatNumber: 2
+      seatsAvailable: 2
     }
   ]
 });
@@ -404,8 +406,8 @@ const eventSchema = new mongoose.Schema({
     unique: true
   },
   roomNumber: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Room'
+    type: Number,
+    required: true
   },
   reserved: {
     type: mongoose.Schema.Types.ObjectId,
@@ -419,26 +421,35 @@ const Event = mongoose.model('Event', eventSchema);
 const newEvent1 = new Event({
   name: 'Wedding Anniversary',
   date: new Date('2023-06-15'),
-  roomNumber: ObjectId('63dd7ecc9812bd5a6cfe495e'),
+  roomNumber: 1,
   reserved: ObjectId('63e14d0c6d595641998c3bf1'),
   guests: [
     {
       name: 'person1',
       email: 'email@g.com',
       status: 'Invited',
-      seatNumber: 1
+      seatNumber: {
+        table: 1,
+        seat: 3
+      }
     },
     {
       name: 'person2',
       email: 'emailh@g.com',
       status: 'Invited',
-      seatNumber: 2
+      seatNumber: {
+        table: 1,
+        seat: 2
+      }
     },
     {
       name: 'person3',
       email: 'email@g.com',
       status: 'Invited',
-      seatNumber: 3
+      seatNumber: {
+        table: 1,
+        seat: 1
+      }
     }
   ],
   seatingPlan: []
@@ -448,25 +459,71 @@ const newEvent2 = new Event({
   name: 'Wedding Anniversary for Joe',
   date: new Date('2023-06-16'),
   reserved: ObjectId('63e4243416c203cb388945e3'),
-  roomNumber: ObjectId('63dd7ecc9812bd5a6cfe4959'),
+  roomNumber: 2,
   guests: [
     {
       name: 'person1',
       email: 'email@g.com',
       status: 'Invited',
-      seatNumber: 1
+      seatNumber: {
+        table: 2,
+        seat: 1
+      }
     },
     {
       name: 'person2',
       email: 'emailh@g.com',
       status: 'Invited',
-      seatNumber: 2
+      seatNumber: {
+        table: 1,
+        seat: 3
+      }
     },
     {
       name: 'person3',
       email: 'email@g.com',
       status: 'Invited',
-      seatNumber: 3
+      seatNumber: {
+        table: 1,
+        seat: 1
+      }
+    }
+  ],
+  seatingPlan: []
+});
+
+const newEvent3 = new Event({
+  name: 'Wedding Anniversary for Kim',
+  date: new Date('2023-06-17'),
+  reserved: ObjectId('63e14d0c6d595641998c3bf1'),
+  roomNumber: 4,
+  guests: [
+    {
+      name: 'person1',
+      email: 'email@g.com',
+      status: 'Invited',
+      seatNumber: {
+        table: 1,
+        seat: 1
+      }
+    },
+    {
+      name: 'person2',
+      email: 'emailh@g.com',
+      status: 'Invited',
+      seatNumber: {
+        table: 1,
+        seat: 2
+      }
+    },
+    {
+      name: 'person3',
+      email: 'email@g.com',
+      status: 'Invited',
+      seatNumber: {
+        table: 1,
+        seat: 3
+      }
     }
   ],
   seatingPlan: []
@@ -499,6 +556,22 @@ Event.findOne({ date: newEvent2.date }, (error, exists) => {
         console.log(error);
       } else {
         console.log('Event 2 saved');
+      }
+    });
+  }
+});
+
+Event.findOne({ date: newEvent3.date }, (error, exists) => {
+  if (error) {
+    console.log(error);
+  } else if (exists) {
+    console.log('Event 3 already created on that day');
+  } else {
+    newEvent3.save((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Event 3 saved');
       }
     });
   }
