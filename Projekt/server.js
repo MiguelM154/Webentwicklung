@@ -62,10 +62,14 @@ const guestSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['Invited', 'Confirmed', 'Declined', 'Attended']
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 });
 
-// const Guest = mongoose.model('Guest', guestSchema);
+const Guest = mongoose.model('Guest', guestSchema);
 
 // Create user Schema for database
 
@@ -132,6 +136,23 @@ const RoomSchema = new mongoose.Schema({
 
 const Room = mongoose.model('Room', RoomSchema);
 
+// create Schema for seats in event
+
+const SeatSchema = new mongoose.Schema({
+  tableNumber: {
+    type: Number,
+    required: true
+  },
+  seatedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Guest'
+  },
+  seatNumber: {
+    type: Number,
+    required: true
+  }
+});
+
 // create Schema event
 
 const eventSchema = new mongoose.Schema({
@@ -144,15 +165,12 @@ const eventSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  roomNumber: {
-    type: Number,
-    required: true
-  },
+  roomNumber: [Number],
   reserved: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  guests: [guestSchema]
+  seatingPlan: [SeatSchema]
 });
 
 const Event = mongoose.model('Event', eventSchema);
@@ -170,6 +188,7 @@ app.post('/new-user', function (req, res) {
         username: req.body.username,
         password: req.body.password
       });
+      console.log(req);
 
       newUser.save((error) => {
         if (error) {
@@ -210,7 +229,7 @@ app.get('/event', (req, res) => {
   });
 });
 
-// get event data to table
+// get data for tables and forms
 
 app.get('/api/dataEvent', (req, res) => {
   Event.find({}, function (err, events) {
@@ -228,7 +247,16 @@ app.get('/api/dataEvent', (req, res) => {
             if (error) {
               console.log(error);
             } else {
-              res.json({ filteredEvents, rooms, tables });
+              Guest.find({}, (error, guests) => {
+                if (error) {
+                  console.log(error);
+                } else {
+                  const filteredGuests = guests.filter(function (obj) {
+                    return (String(obj.user) === String(req.session.userId));
+                  });
+                  res.json({ filteredEvents, rooms, tables, filteredGuests });
+                }
+              });
             }
           });
         }
@@ -237,7 +265,30 @@ app.get('/api/dataEvent', (req, res) => {
   });
 });
 
-// get rooms and event data to table
+// get Guestform data
+
+app.post('/new-guest', (req, res) => {
+  let isTrue;
+  if (req.isChild === 'true') {
+    isTrue = true;
+  } else {
+    isTrue = false;
+  }
+  const newGuest = new Guest({
+    name: req.body.name,
+    child: isTrue,
+    status: req.body.gstatus,
+    user: req.session.userId
+  });
+
+  newGuest.save((error) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.redirect('/event');
+    }
+  });
+});
 
 // create rooms with tables
 
@@ -246,7 +297,7 @@ const room1 = new Room({
   number: 1,
   description: 'A spacious room with natural light.',
   capacity: 30,
-  numberOfTables: 4,
+  numberOfTables: 3,
   tables: [
     {
       number: 1,
@@ -427,76 +478,73 @@ Room.findOne({ number: room4.number }, (error, exists) => {
 const newEvent1 = new Event({
   name: 'Wedding Anniversary',
   date: new Date('2023-06-15'),
-  roomNumber: 1,
+  roomNumber: [1, 3],
   reserved: ObjectId('63e14d0c6d595641998c3bf1'),
-  guests: [
+  seatingPlan: [
     {
-      name: 'person1',
-      child: true,
-      status: 'Invited'
+      tableNumber: 1,
+      seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
+      seatNumber: 1
     },
     {
-      name: 'person2',
-      child: false,
-      status: 'Invited'
+      tableNumber: 2,
+      seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
+      seatNumber: 2
     },
     {
-      name: 'person3',
-      child: false,
-      status: 'Invited'
+      tableNumber: 3,
+      seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
+      seatNumber: 2
     }
-  ],
-  seatingPlan: []
+  ]
 });
 
 const newEvent2 = new Event({
   name: 'Wedding Anniversary for Joe',
   date: new Date('2023-06-16'),
-  reserved: ObjectId('63e4243416c203cb388945e3'),
-  roomNumber: 2,
-  guests: [
+  reserved: ObjectId('63e14d0c6d595641998c3bf1'),
+  roomNumber: [4],
+  seatingPlan: [
     {
-      name: 'person1',
-      child: true,
-      status: 'Invited'
+      tableNumber: 15,
+      seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
+      seatNumber: 1
     },
     {
-      name: 'person2',
-      child: false,
-      status: 'Invited'
+      tableNumber: 14,
+      seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
+      seatNumber: 2
     },
     {
-      name: 'person3',
-      child: false,
-      status: 'Invited'
+      tableNumber: 15,
+      seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
+      seatNumber: 2
     }
-  ],
-  seatingPlan: []
+  ]
 });
 
 const newEvent3 = new Event({
-  name: 'Wedding Anniversary for Kim',
-  date: new Date('2023-06-17'),
-  reserved: ObjectId('63e14d0c6d595641998c3bf1'),
-  roomNumber: 4,
-  guests: [
+  name: 'Wedding Anniversary for Joe',
+  date: new Date('2023-06-19'),
+  reserved: ObjectId('63e4243416c203cb388945e3'),
+  roomNumber: [4],
+  seatingPlan: [
     {
-      name: 'person1',
-      child: true,
-      status: 'Invited'
+      tableNumber: 13,
+      seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
+      seatNumber: 1
     },
     {
-      name: 'person2',
-      child: false,
-      status: 'Invited'
+      tableNumber: 14,
+      seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
+      seatNumber: 2
     },
     {
-      name: 'person3',
-      child: false,
-      status: 'Invited'
+      tableNumber: 15,
+      seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
+      seatNumber: 2
     }
-  ],
-  seatingPlan: []
+  ]
 });
 
 Event.findOne({ date: newEvent1.date }, (error, exists) => {

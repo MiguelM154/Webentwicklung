@@ -65,10 +65,9 @@
     <table id="data-guest" onload="getDataGuest()">
             <th>Guests</th>
         <tr>
-          <th>Event</th>
           <th>Guest Name</th>
+          <th>Child</th>
           <th>Status</th>
-          <th>Email</th>
         </tr>
       </table>
 
@@ -87,20 +86,23 @@
       <br></br>
 
       <div class="container">
-        <form action="action_page.php" onload="getEventOptions()">
+        <form action="/new-guest" method="post">
       
-          <label for="fname">Guest First Name</label>
-          <input type="text" id="gname" name="gname" placeholder="Name..">
+          <label for="name">Guest Name</label>
+          <input type="text" id="name" name="name" placeholder="Name..">
       
-          <label for="lname">Guest Email</label>
-          <input type="text" id="gemail" name="gemail" placeholder="Email..">
+          <label for="isChild">Is guest a child ?</label>
+          <select id="isChild" name="isChild">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
 
-          <label for="status">Status</label>
-            <select id="status" name="status">
-            <option value="invited">Invited</option>
-            <option value="declined">Declined</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="attended">Attended</option>
+          <label for="gstatus">Status</label>
+            <select id="gstatus" name="gstatus">
+            <option value="Invited">Invited</option>
+            <option value="Declined">Declined</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Attended">Attended</option>
             </select>
       
           <input type="submit" value="Submit">
@@ -108,18 +110,33 @@
         </form>
       </div>
 
-      <div class="container">
-        <form action="action_page.php" onload="getEventOptions()">
-      
-          <label for="fname">Guest First Name</label>
-          <input type="text" id="gname" name="gname" placeholder="Name..">
+      <br></br>
 
-          <label for="status">Status</label>
-            <select id="status" name="status">
-            <option value="invited">Invited</option>
-            <option value="declined">Declined</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="attended">Attended</option>
+      <div class="container">
+        <form action="/new-event" method="post">
+      
+          <label for="ename">Event Name</label>
+          <input type="text" id="ename" name="ename" placeholder="Name..">
+
+          <label for="date">Date</label>
+          <input type="date" id="edate" name="edate">
+
+          <label for="room">Room</label>
+          <input type="date" id="eroom" name="eroom">
+      
+          <input type="submit" value="Submit">
+      
+        </form>
+      </div>
+
+      <br></br>
+
+      <div class="container">
+        <form onload="getEventOptions()">
+      
+          <label for="fname">Select Guest to put in Event</label>
+          <select id="gie" name="gie">
+            
             </select>
 
             <label for="guestevent">Event</label>
