@@ -23,11 +23,8 @@ function getDataGuest () {
   fetch('/api/dataEvent')
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
       const stringifiedObject = JSON.stringify(res);
-      console.log(stringifiedObject);
       const objects = JSON.parse(stringifiedObject);
-      console.log(objects);
       const table = document.getElementById('data-guest');
       for (let i = 0; i < objects.filteredEvents.length; i++) {
         for (let g = 0; g < objects.filteredEvents[i].guests.length; g++) {
@@ -51,11 +48,8 @@ function getDataTables () {
   fetch('/api/dataEvent')
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
       const stringifiedObject = JSON.stringify(res);
-      console.log(stringifiedObject);
       const objects = JSON.parse(stringifiedObject);
-      console.log(objects);
       const table = document.getElementById('data-table');
       for (let i = 0; i < objects.filteredEvents.length; i++) {
         for (let g = 0; g < objects.filteredEvents[i].guests.length; g++) {
@@ -79,34 +73,39 @@ function getEventOptions () {
   fetch('/api/dataEvent')
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
       const stringifiedObject = JSON.stringify(res);
-      console.log(stringifiedObject);
       const objects = JSON.parse(stringifiedObject);
-      const selectTableOptions = document.getElementById('guestevent');
-      for (let i = 0; i < objects.filteredEvents.length; i++) {
-        const opt = document.createElement('option');
-        opt.value = objects.filteredEvents[i]._id;
-        opt.innerHTML = objects.filteredEvents[i].name;
-        selectTableOptions.appendChild(opt);
-      }
-      /* let listOfTablesAndSeats = [];
-      let isTrue = false;
-      let seatNumber = 0;
-      for (let i = 0; i < objects.rooms.lengt; i++) {
-        for (let g = 1; g < objects.rooms.tables.length; g++) {
-          for (let j = 1; j < objects.filteredEvents.length; j ++) {
-            if (object) {
-              isTrue = true;
-            }
+      if (objects.filteredEvents.length !== 0) {
+        for (let i = 0; i < objects.filteredEvents.length; i++) {
+          const selectTableOptions = document.getElementById('guestevent');
+          const opt = document.createElement('option');
+          opt.value = objects.filteredEvents[i]._id;
+          opt.innerHTML = objects.filteredEvents[i].name;
+          selectTableOptions.appendChild(opt);
+        }
+        const roomnumber = objects.filteredEvents[0].roomNumber;
+        let room;
+        for (let i = 0; i <= objects.rooms.length; i++) {
+          if (objects.rooms[i].number === roomnumber) {
+            room = objects.rooms[i];
+            break;
           }
         }
-        if () {
-
+        const selectTableOptions = document.getElementById('seatTable');
+        selectTableOptions.options.length = 0;
+        for (let i = 1; i <= room.tables.length; i++) {
+          const optTable = document.createElement('option');
+          optTable.value = i;
+          optTable.innerHTML = i;
+          selectTableOptions.appendChild(optTable);
         }
-        isTrue = false;
-      } */
-      console.log('test');
+        const selectRoomOptions = document.getElementById('rooms');
+        const optRoom = document.createElement('option');
+        selectRoomOptions.options.length = 0;
+        optRoom.value = room.number;
+        optRoom.innerHTML = room.number;
+        selectRoomOptions.appendChild(optRoom);
+      }
     }
     );
 }
@@ -119,11 +118,8 @@ window.onload = function () {
     fetch('/api/dataEvent')
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         const stringifiedObject = JSON.stringify(res);
-        console.log(stringifiedObject);
         const objects = JSON.parse(stringifiedObject);
-        console.log(objects);
         let roomnumber;
         const selectElement = event.target;
         const selectedIndex = selectElement.selectedIndex;
@@ -132,7 +128,6 @@ window.onload = function () {
         for (let i = 0; i < objects.filteredEvents.length; i++) {
           if (String(selectedValue) === String(objects.filteredEvents[i]._id)) {
             roomnumber = objects.filteredEvents[i].roomNumber;
-            console.log(roomnumber);
             break;
           }
         }
@@ -140,20 +135,60 @@ window.onload = function () {
         for (let i = 0; i <= objects.rooms.length; i++) {
           if (objects.rooms[i].number === roomnumber) {
             room = objects.rooms[i];
-            console.log(room);
             break;
           }
         }
-        if (objects.filteredEvents.length !== 0) {
-          const selectTableOptions = document.getElementById('seatTable');
-          selectTableOptions.options.length = 0;
-          for (let i = 1; i <= room.tables.length; i++) {
-            const opt = document.createElement('option');
-            opt.value = i;
-            opt.innerHTML = i;
-            selectTableOptions.appendChild(opt);
+        const selectTableOptions = document.getElementById('seatTable');
+        selectTableOptions.options.length = 0;
+        for (let i = 1; i <= room.tables.length; i++) {
+          const optTable = document.createElement('option');
+          optTable.value = i;
+          optTable.innerHTML = i;
+          selectTableOptions.appendChild(optTable);
+        }
+        const selectRoomOptions = document.getElementById('rooms');
+        selectRoomOptions.options.length = 0;
+        const optRoom = document.createElement('option');
+        optRoom.value = room.number;
+        optRoom.innerHTML = room.number;
+        selectRoomOptions.appendChild(optRoom);
+      }
+      );
+  });
+
+  const selectedOptionRoom = document.getElementById('rooms');
+
+  selectedOptionRoom.addEventListener('change', function (rooms) {
+    fetch('/api/dataEvent')
+      .then((res) => res.json())
+      .then((res) => {
+        const stringifiedObject = JSON.stringify(res);
+        const objects = JSON.parse(stringifiedObject);
+        const selectElement = rooms.target;
+        const selectedIndex = selectElement.selectedIndex;
+        const selectedOption = selectElement.options[selectedIndex];
+        const selectedValue = selectedOption.value;
+        let room;
+        for (let i = 0; i <= objects.rooms.length; i++) {
+          if (objects.rooms[i].number === selectedValue) {
+            room = objects.rooms[i];
+            break;
           }
         }
+        const selectTableOptions = document.getElementById('seatTable');
+        selectTableOptions.options.length = 0;
+        for (let i = 1; i <= room.tables.length; i++) {
+          const optTable = document.createElement('option');
+          optTable.value = i;
+          optTable.innerHTML = i;
+          selectTableOptions.appendChild(optTable);
+        }
+        const selectRoomOptions = document.getElementById('rooms');
+        selectRoomOptions.options.length = 0;
+        const optRoom = document.createElement('option');
+        optRoom.value = room.number;
+        optRoom.innerHTML = room.number;
+        selectRoomOptions.appendChild(optRoom);
       }
       );
   });

@@ -47,6 +47,26 @@ app.get('/application', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build/application.html'));
 });
 
+// create Schema guest
+
+const guestSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  child: {
+    type: Boolean,
+    required: true
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ['Invited', 'Confirmed', 'Declined', 'Attended']
+  }
+});
+
+// const Guest = mongoose.model('Guest', guestSchema);
+
 // Create user Schema for database
 
 const userSchema = {
@@ -62,6 +82,80 @@ const userSchema = {
 };
 
 const User = mongoose.model('User', userSchema);
+
+// create Schema of tables for restaurant
+
+const tableSchema = {
+  number: {
+    type: Number,
+    required: true,
+    unique: true
+  },
+  seatsAvailable: {
+    type: Number,
+    required: true
+  }
+};
+
+const Table = mongoose.model('Table', tableSchema);
+
+// Schema rooms where people can rent one or more for all sort of activities
+
+const RoomSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  number: {
+    type: Number,
+    required: true,
+    unique: true
+  },
+  description: {
+    type: String,
+    default: ''
+  },
+  capacity: {
+    type: Number,
+    required: true
+  },
+  reservedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  numberOfTables: {
+    type: Number,
+    required: true
+  },
+  tables: [tableSchema]
+});
+
+const Room = mongoose.model('Room', RoomSchema);
+
+// create Schema event
+
+const eventSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true,
+    unique: true
+  },
+  roomNumber: {
+    type: Number,
+    required: true
+  },
+  reserved: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  guests: [guestSchema]
+});
+
+const Event = mongoose.model('Event', eventSchema);
 
 // save user to database after registration
 
@@ -130,7 +224,13 @@ app.get('/api/dataEvent', (req, res) => {
         if (error) {
           console.log(error);
         } else {
-          res.json({ filteredEvents, rooms });
+          Table.find({}, (error, tables) => {
+            if (error) {
+              console.log(error);
+            } else {
+              res.json({ filteredEvents, rooms, tables });
+            }
+          });
         }
       });
     }
@@ -138,53 +238,6 @@ app.get('/api/dataEvent', (req, res) => {
 });
 
 // get rooms and event data to table
-
-// create Schema of tables for restaurant
-
-const tableSchema = {
-  number: {
-    type: Number,
-    required: true,
-    unique: true
-  },
-  seatsAvailable: {
-    type: Number,
-    required: true
-  }
-};
-
-// Schema rooms where people can rent one or more for all sort of activities
-
-const RoomSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  number: {
-    type: Number,
-    required: true,
-    unique: true
-  },
-  description: {
-    type: String,
-    default: ''
-  },
-  capacity: {
-    type: Number,
-    required: true
-  },
-  reservedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  numberOfTables: {
-    type: Number,
-    required: true
-  },
-  tables: [tableSchema]
-});
-
-const Room = mongoose.model('Room', RoomSchema);
 
 // create rooms with tables
 
@@ -369,54 +422,7 @@ Room.findOne({ number: room4.number }, (error, exists) => {
   }
 });
 
-// create Schema guest
-
-const guestSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
-  },
-  status: {
-    type: String,
-    required: true,
-    enum: ['Invited', 'Confirmed', 'Declined', 'Attended']
-  },
-  seatNumber: {
-    table: Number,
-    seat: Number
-  }
-});
-
-// const Guest = mongoose.model('Guest', guestSchema);
-
-// create Schema event
-
-const eventSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  date: {
-    type: Date,
-    required: true,
-    unique: true
-  },
-  roomNumber: {
-    type: Number,
-    required: true
-  },
-  reserved: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  guests: [guestSchema]
-});
-
-const Event = mongoose.model('Event', eventSchema);
+// creating Events
 
 const newEvent1 = new Event({
   name: 'Wedding Anniversary',
@@ -426,30 +432,18 @@ const newEvent1 = new Event({
   guests: [
     {
       name: 'person1',
-      email: 'email@g.com',
-      status: 'Invited',
-      seatNumber: {
-        table: 1,
-        seat: 3
-      }
+      child: true,
+      status: 'Invited'
     },
     {
       name: 'person2',
-      email: 'emailh@g.com',
-      status: 'Invited',
-      seatNumber: {
-        table: 1,
-        seat: 2
-      }
+      child: false,
+      status: 'Invited'
     },
     {
       name: 'person3',
-      email: 'email@g.com',
-      status: 'Invited',
-      seatNumber: {
-        table: 1,
-        seat: 1
-      }
+      child: false,
+      status: 'Invited'
     }
   ],
   seatingPlan: []
@@ -463,30 +457,18 @@ const newEvent2 = new Event({
   guests: [
     {
       name: 'person1',
-      email: 'email@g.com',
-      status: 'Invited',
-      seatNumber: {
-        table: 2,
-        seat: 1
-      }
+      child: true,
+      status: 'Invited'
     },
     {
       name: 'person2',
-      email: 'emailh@g.com',
-      status: 'Invited',
-      seatNumber: {
-        table: 1,
-        seat: 3
-      }
+      child: false,
+      status: 'Invited'
     },
     {
       name: 'person3',
-      email: 'email@g.com',
-      status: 'Invited',
-      seatNumber: {
-        table: 1,
-        seat: 1
-      }
+      child: false,
+      status: 'Invited'
     }
   ],
   seatingPlan: []
@@ -500,30 +482,18 @@ const newEvent3 = new Event({
   guests: [
     {
       name: 'person1',
-      email: 'email@g.com',
-      status: 'Invited',
-      seatNumber: {
-        table: 1,
-        seat: 1
-      }
+      child: true,
+      status: 'Invited'
     },
     {
       name: 'person2',
-      email: 'emailh@g.com',
-      status: 'Invited',
-      seatNumber: {
-        table: 1,
-        seat: 2
-      }
+      child: false,
+      status: 'Invited'
     },
     {
       name: 'person3',
-      email: 'email@g.com',
-      status: 'Invited',
-      seatNumber: {
-        table: 1,
-        seat: 3
-      }
+      child: false,
+      status: 'Invited'
     }
   ],
   seatingPlan: []

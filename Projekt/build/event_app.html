@@ -59,7 +59,9 @@
         <th>Raum</th>
     </tr>
     </table>
+
     <br></br>
+
     <table id="data-guest" onload="getDataGuest()">
             <th>Guests</th>
         <tr>
@@ -69,16 +71,21 @@
           <th>Email</th>
         </tr>
       </table>
+
       <br></br>
+
     <table id="data-table" onload="getDataTables()">
         <th>Table Placement</th>
         <tr>
+            <th>Event</th>
           <th>Guest Name</th>
           <th>Table</th>
           <th>Seat</th>
         </tr>
       </table>
+
       <br></br>
+
       <div class="container">
         <form action="action_page.php" onload="getEventOptions()">
       
@@ -95,9 +102,33 @@
             <option value="confirmed">Confirmed</option>
             <option value="attended">Attended</option>
             </select>
+      
+          <input type="submit" value="Submit">
+      
+        </form>
+      </div>
+
+      <div class="container">
+        <form action="action_page.php" onload="getEventOptions()">
+      
+          <label for="fname">Guest First Name</label>
+          <input type="text" id="gname" name="gname" placeholder="Name..">
+
+          <label for="status">Status</label>
+            <select id="status" name="status">
+            <option value="invited">Invited</option>
+            <option value="declined">Declined</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="attended">Attended</option>
+            </select>
 
             <label for="guestevent">Event</label>
             <select id="guestevent" name="guestevent">
+
+            </select>
+
+            <label for="rooms">Rooms</label>
+            <select id="rooms" name="rooms">
 
             </select>
 
