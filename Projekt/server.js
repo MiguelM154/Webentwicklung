@@ -60,8 +60,7 @@ const guestSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    required: true,
-    enum: ['Invited', 'Confirmed', 'Declined', 'Attended']
+    required: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -139,6 +138,10 @@ const Room = mongoose.model('Room', RoomSchema);
 // create Schema for seats in event
 
 const SeatSchema = new mongoose.Schema({
+  roomNumber: {
+    type: Number,
+    required: true
+  },
   tableNumber: {
     type: Number,
     required: true
@@ -288,6 +291,95 @@ app.post('/new-guest', (req, res) => {
       res.redirect('/event');
     }
   });
+});
+
+// get Eventform data
+
+app.post('/new-event', (req, res) => {
+  const newEvent = new Event({
+    name: req.body.ename,
+    date: req.body.edate,
+    roomNumber: req.body.room,
+    reserved: req.session.userId,
+    seatingPlan: []
+  });
+
+  newEvent.save((error) => {
+    if (error) {
+      res.status(500).send(error);
+    } else {
+      res.redirect('/event');
+    }
+  });
+});
+
+// get list of rooms available in that day
+
+app.post('/data', function (req, res) {
+  const data = req.body;
+  let result;
+  let roomList;
+  console.log('test');
+  Event.find({}, function (err, events) {
+    if (err) {
+      return console.error(err);
+    } else {
+      const dateD = new Date(data.dat);
+      const yearD = dateD.getFullYear();
+      const monthD = dateD.getMonth();
+      const dayD = dateD.getDate();
+      const filteredEvents = events.filter(function (obj) {
+        const date = new Date(obj.date);
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDate();
+        return ((dayD === day) && (yearD === year) && (monthD === month));
+      });
+      Room.find({}, function (err, event) {
+        if (err) {
+          return console.error(err);
+        } else {
+          for (let i = 0; i < event.length; i++) {
+            for (let g = 0; g < filteredEvents.length; g++) {
+              if (event[i].number === filteredEvents[g].roomNumber) {
+                let isTrue = false;
+                for (let j = 0; j < roomList.length; j++) {
+                  if (event[i].number === roomList[j]) {
+                    isTrue = true;
+                  }
+                }
+                if (isTrue === true) {
+                  roomList.push(event[i].number);
+                }
+              }
+            }
+          }
+        }
+      });
+      result = roomList;
+    }
+  });
+  res.json(result);
+});
+
+// get Seatplacement data
+
+app.post('/new-placement', (req, res) => {
+  /* Event.findOne({ date: newEvent3.date }, (error, exists) => {
+    if (error) {
+      console.log(error);
+    } else if (exists) {
+      console.log('Event 3 already created on that day');
+    } else {
+      newEvent3.save((error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Event 3 saved');
+        }
+      });
+    }
+  }); */
 });
 
 // create rooms with tables
@@ -482,16 +574,19 @@ const newEvent1 = new Event({
   reserved: ObjectId('63e14d0c6d595641998c3bf1'),
   seatingPlan: [
     {
+      roomNumber: 1,
       tableNumber: 1,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 1
     },
     {
+      roomNumber: 1,
       tableNumber: 2,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 2
     },
     {
+      roomNumber: 1,
       tableNumber: 3,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 2
@@ -506,16 +601,19 @@ const newEvent2 = new Event({
   roomNumber: [4],
   seatingPlan: [
     {
+      roomNumber: 4,
       tableNumber: 15,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 1
     },
     {
+      roomNumber: 4,
       tableNumber: 14,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 2
     },
     {
+      roomNumber: 4,
       tableNumber: 15,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 2
@@ -530,16 +628,19 @@ const newEvent3 = new Event({
   roomNumber: [4],
   seatingPlan: [
     {
+      roomNumber: 4,
       tableNumber: 13,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 1
     },
     {
+      roomNumber: 4,
       tableNumber: 14,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 2
     },
     {
+      roomNumber: 4,
       tableNumber: 15,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 2

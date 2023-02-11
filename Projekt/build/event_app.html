@@ -119,10 +119,13 @@
           <input type="text" id="ename" name="ename" placeholder="Name..">
 
           <label for="date">Date</label>
-          <input type="date" id="edate" name="edate">
+          <input type="date" id="edate" name="edate"> <button id="test-date" type="button">Test</button>
 
-          <label for="room">Room</label>
-          <input type="date" id="eroom" name="eroom">
+          <br></br>
+          
+          <div id="contain">
+
+          </div>
       
           <input type="submit" value="Submit">
       
@@ -132,7 +135,7 @@
       <br></br>
 
       <div class="container">
-        <form onload="getEventOptions()">
+        <form action="/new-placement" method="post" onload="getEventOptions()">
       
           <label for="fname">Select Guest to put in Event</label>
           <select id="gie" name="gie">
