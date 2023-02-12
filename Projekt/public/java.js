@@ -53,6 +53,19 @@ async function sendData (data) {
   return result;
 }
 
+async function sendDataForEvent (data) {
+  const response = await fetch('/data-guest-event', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  const result = await response.json();
+  console.log(result);
+  return result;
+}
+
 /* function getDataTables () {
   fetch('/api/dataEvent')
     .then((res) => res.json())
@@ -93,6 +106,13 @@ function getEventOptions () {
           selectGuestOptions.appendChild(opt);
         }
       }
+      sendDataForEvent({ da: objects.filteredGuests[0]._id, dt: objects.filteredEvents[0]._id })
+        .then(result => {
+          console.log(result);
+        })
+        .catch(error => {
+          console.error(error);
+        });
       if (objects.filteredEvents.length !== 0) {
         for (let i = 0; i < objects.filteredEvents.length; i++) {
           const selectTableOptions = document.getElementById('guestevent');
@@ -128,10 +148,7 @@ function getEventOptions () {
         selectSeatOptions.options.length = 0;
         for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
           const optSeat = document.createElement('option');
-          const seatData = {
-            tableNumber: room.tables[0].number,
-            seatNumber: i + 1
-          };
+          const seatData = i + 1;
           optSeat.value = seatData;
           optSeat.innerHTML = i + 1;
           selectSeatOptions.appendChild(optSeat);
@@ -314,84 +331,118 @@ window.onload = function () {
       );
   });
 
-  // listen to button click in event form
+  // date tag changes
 
-  const button = document.getElementById('test-date');
-  const inputBeginning = document.getElementById('edate');
+  const dateTag = document.getElementById('edate');
 
-  button.addEventListener('click', function () {
-    if (document.getElementById('room') === null && inputBeginning.value) {
-      fetch('/api/dataEvent')
-        .then((res) => res.json())
-        .then((res) => {
-          const stringifiedObject = JSON.stringify(res);
-          const objects = JSON.parse(stringifiedObject);
-          const input = document.getElementById('edate');
-          const value = input.value;
-          let isTrue = false;
-          let dat;
-          const dateD = new Date(value);
-          const yearD = dateD.getFullYear();
-          const monthD = dateD.getMonth();
-          const dayD = dateD.getDate();
-          for (let i = 0; i < objects.filteredEvents.length; i++) {
-            const date = new Date(objects.filteredEvents[i].date);
-            dat = date;
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            const day = date.getDate();
-            console.log(dayD + ' ' + day + ' ' + yearD + ' ' + year + ' ' + monthD + ' ' + month);
-            if ((dayD === day) && (yearD === year) && (monthD === month)) {
-              isTrue = true;
-            }
-          }
-          if (isTrue === true) {
-            let listOfRoomsAvailable;
-            if (objects.rooms.length !== 0) {
-              sendData({ da: dat })
-                .then(result => {
-                  listOfRoomsAvailable = result;
-                  console.log(listOfRoomsAvailable);
-                })
-                .catch(error => {
-                  console.error(error);
-                });
-
-              /* const select = document.createElement('select');
-              select.id = 'room';
-              select.multiple = true;
-              for (let i = 0; i < listOfRoomsAvailable.length; i++) {
-                const opt = document.createElement('option');
-                opt.value = listOfRoomsAvailable[i].number;
-                opt.innerHTML = listOfRoomsAvailable[i].number;
-                select.appendChild(opt);
+  dateTag.addEventListener('change', function () {
+    const div = document.getElementById('contain');
+    div.innerHTML = '';
+    fetch('/api/dataEvent')
+      .then((res) => res.json())
+      .then((res) => {
+        const stringifiedObject = JSON.stringify(res);
+        const objects = JSON.parse(stringifiedObject);
+        const input = document.getElementById('edate');
+        const value = input.value;
+        console.log(value);
+        let isTrue = false;
+        const dat = new Date(value);
+        let listOfRoomsAvailable;
+        if (objects.rooms.length !== 0) {
+          sendData({ da: dat })
+            .then(result => {
+              listOfRoomsAvailable = result;
+              if (listOfRoomsAvailable.rooms.length > 0) {
+                isTrue = true;
               }
-              const label = document.createElement('label');
-              label.innerHTML = 'Room';
-              const container = document.getElementById('contain');
-              container.appendChild(label);
-              container.appendChild(select); */
-            }
-          } else {
-            if (objects.rooms.length !== 0) {
-              const select = document.createElement('select');
-              select.id = 'room';
-              select.multiple = true;
-              for (let i = 0; i < objects.rooms.length; i++) {
-                const opt = document.createElement('option');
-                opt.value = objects.rooms[i].number;
-                opt.innerHTML = objects.rooms[i].number;
-                select.appendChild(opt);
+              if (listOfRoomsAvailable.rooms.length !== objects.rooms.length) {
+                if (isTrue === true) {
+                  const select = document.createElement('select');
+                  select.id = 'roomforevent';
+                  select.name = 'roomforevent';
+                  select.multiple = true;
+                  let isTrue1 = false;
+                  for (let i = 0; i < objects.rooms.length; i++) {
+                    for (let g = 0; g < listOfRoomsAvailable.rooms.length; g++) {
+                      if (Number(listOfRoomsAvailable.rooms[g]) === Number(objects.rooms[i].number)) {
+                        isTrue1 = true;
+                      }
+                    }
+                    if (isTrue1 === false) {
+                      const opt = document.createElement('option');
+                      opt.value = objects.rooms[i].number;
+                      opt.innerHTML = objects.rooms[i].number;
+                      select.appendChild(opt);
+                    }
+                    isTrue1 = false;
+                  }
+                  const label = document.createElement('label');
+                  label.innerHTML = 'Room';
+                  const container = document.getElementById('contain');
+                  container.appendChild(label);
+                  container.appendChild(select);
+                  const submitButton = document.createElement('input');
+                  submitButton.type = 'submit';
+                  submitButton.value = 'Submit';
+                  container.appendChild(submitButton);
+                } else {
+                  if (objects.rooms.length !== 0) {
+                    const select = document.createElement('select');
+                    select.id = 'roomforevent';
+                    select.name = 'roomforevent';
+                    select.multiple = true;
+                    for (let i = 0; i < objects.rooms.length; i++) {
+                      const opt = document.createElement('option');
+                      opt.value = objects.rooms[i].number;
+                      opt.innerHTML = objects.rooms[i].number;
+                      select.appendChild(opt);
+                    }
+                    const label = document.createElement('label');
+                    label.innerHTML = 'Room';
+                    const container = document.getElementById('contain');
+                    container.appendChild(label);
+                    container.appendChild(select);
+                    const submitButton = document.createElement('input');
+                    submitButton.type = 'submit';
+                    submitButton.id = 'submit';
+                    submitButton.value = 'Submit';
+                    container.appendChild(submitButton);
+                  }
+                }
               }
-              const label = document.createElement('label');
-              label.innerHTML = 'Room';
-              const container = document.getElementById('contain');
-              container.appendChild(label);
-              container.appendChild(select);
-            }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          /* const select = document.createElement('select');
+          select.id = 'room';
+          select.multiple = true;
+          for (let i = 0; i < listOfRoomsAvailable.length; i++) {
+            const opt = document.createElement('option');
+            opt.value = listOfRoomsAvailable[i].number;
+            opt.innerHTML = listOfRoomsAvailable[i].number;
+            select.appendChild(opt);
           }
+          const label = document.createElement('label');
+          label.innerHTML = 'Room';
+          const container = document.getElementById('contain');
+          container.appendChild(label);
+          container.appendChild(select); */
         }
-        );
+      }
+      );
+  });
+
+  const form = document.getElementById('event-form');
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formElements = event.target.elements;
+    console.log(formElements.roomforevent.selectedOptions);
+
+    for (let i = 0; i < formElements.length; i++) {
+      console.log(formElements[i].name + ':' + formElements[i].value);
     }
   });
 

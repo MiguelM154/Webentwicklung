@@ -191,7 +191,6 @@ app.post('/new-user', function (req, res) {
         username: req.body.username,
         password: req.body.password
       });
-      console.log(req);
 
       newUser.save((error) => {
         if (error) {
@@ -212,7 +211,6 @@ app.post('/login', (req, res) => {
       res.status(500).send(error);
     } else if (user) {
       req.session.userId = user._id;
-      console.log(req.session.userId);
       res.redirect('/');
     } else {
       res.redirect('/login');
@@ -299,7 +297,7 @@ app.post('/new-event', (req, res) => {
   const newEvent = new Event({
     name: req.body.ename,
     date: req.body.edate,
-    roomNumber: req.body.room,
+    roomNumber: req.body.roomforevent,
     reserved: req.session.userId,
     seatingPlan: []
   });
@@ -307,8 +305,6 @@ app.post('/new-event', (req, res) => {
   newEvent.save((error) => {
     if (error) {
       res.status(500).send(error);
-    } else {
-      res.redirect('/event');
     }
   });
 });
@@ -317,14 +313,12 @@ app.post('/new-event', (req, res) => {
 
 app.post('/data', function (req, res) {
   const data = req.body;
-  let result;
-  let roomList;
-  console.log('test');
+  const roomList = [];
   Event.find({}, function (err, events) {
     if (err) {
       return console.error(err);
     } else {
-      const dateD = new Date(data.dat);
+      const dateD = new Date(data.da);
       const yearD = dateD.getFullYear();
       const monthD = dateD.getMonth();
       const dayD = dateD.getDate();
@@ -335,51 +329,69 @@ app.post('/data', function (req, res) {
         const day = date.getDate();
         return ((dayD === day) && (yearD === year) && (monthD === month));
       });
-      Room.find({}, function (err, event) {
-        if (err) {
-          return console.error(err);
-        } else {
-          for (let i = 0; i < event.length; i++) {
-            for (let g = 0; g < filteredEvents.length; g++) {
-              if (event[i].number === filteredEvents[g].roomNumber) {
-                let isTrue = false;
-                for (let j = 0; j < roomList.length; j++) {
-                  if (event[i].number === roomList[j]) {
-                    isTrue = true;
-                  }
-                }
-                if (isTrue === true) {
-                  roomList.push(event[i].number);
-                }
-              }
+      let isTrue = false;
+      for (let j = 0; j < filteredEvents.length; j++) {
+        for (let i = 0; i < filteredEvents[j].roomNumber.length; i++) {
+          for (let g = 0; g < roomList.length; g++) {
+            if (roomList[g] === filteredEvents[j].roomNumber[i]) {
+              isTrue = true;
+              break;
             }
           }
+          if (isTrue === false) {
+            roomList.push(filteredEvents[j].roomNumber[i]);
+          }
+          isTrue = false;
         }
-      });
-      result = roomList;
+      }
+      res.json({ rooms: roomList });
     }
   });
-  res.json(result);
 });
 
-// get Seatplacement data
+// see if guest is already in event
+
+app.post('/data-guest-event', function (req, res) {
+  Event.find({}, function (err, events) {
+    if (err) {
+      return console.error(err);
+    } else {
+      const filteredEvents = events.filter(function (obj) {
+        let ob;
+        if (String(obj._id) === String(req.body.dt)) {
+          let isTrue = false;
+          for (let i = 0; i < obj.seatingPlan.length; i++) {
+            if (String(obj.seatingPlan[i].seatedBy) === String(req.body.da)) {
+              isTrue = true;
+            }
+          }
+          if (isTrue === false) {
+            ob = obj;
+          }
+        }
+        return ob;
+      });
+      res.json({ filtered: filteredEvents });
+    }
+  });
+});
+
+// get Seat placement data
 
 app.post('/new-placement', (req, res) => {
-  /* Event.findOne({ date: newEvent3.date }, (error, exists) => {
+  console.log(req.body.gie);
+  console.log(req.body.guestevent);
+  console.log(req.body.rooms);
+  console.log(req.body.seatTable);
+  console.log(req.body.seatSeat);
+  Event.findOne({ _id: Object(req.body.guestevent) }, { seatingPlan: { roomNumber: req.body.rooms, tableNumber: req.body.seatTable, seatedBy: req.body.gie, seatNumber: req.body.seatSeat } }, (error, event) => {
     if (error) {
       console.log(error);
-    } else if (exists) {
-      console.log('Event 3 already created on that day');
     } else {
-      newEvent3.save((error) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Event 3 saved');
-        }
-      });
+      console.log(event);
+      res.redirect('/event');
     }
-  }); */
+  });
 });
 
 // create rooms with tables
