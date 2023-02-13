@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-mongoose.connect('mongodb://localhost/occassionDB', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost:27017/occassionDB', { useNewUrlParser: true });
 
 app.listen(port[2] || 8080, () => {
 
@@ -165,8 +165,7 @@ const eventSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    required: true,
-    unique: true
+    required: true
   },
   roomNumber: [Number],
   reserved: {
@@ -305,6 +304,8 @@ app.post('/new-event', (req, res) => {
   newEvent.save((error) => {
     if (error) {
       res.status(500).send(error);
+    } else {
+      res.redirect('/event');
     }
   });
 });
@@ -379,19 +380,46 @@ app.post('/data-guest-event', function (req, res) {
 // get Seat placement data
 
 app.post('/new-placement', (req, res) => {
+  const ObjectId = require('mongodb').ObjectId;
   console.log(req.body.gie);
   console.log(req.body.guestevent);
   console.log(req.body.rooms);
   console.log(req.body.seatTable);
   console.log(req.body.seatSeat);
-  Event.findOne({ _id: Object(req.body.guestevent) }, { seatingPlan: { roomNumber: req.body.rooms, tableNumber: req.body.seatTable, seatedBy: req.body.gie, seatNumber: req.body.seatSeat } }, (error, event) => {
+  console.log(ObjectId(req.body.guestevent));
+  const MongoClient = require('mongodb').MongoClient;
+  const uri = 'mongodb://localhost:27017/';
+
+  MongoClient.connect(uri, function (err, client) {
+    if (err) {
+      return console.log('Error connecting to the database: ' + err);
+    }
+    const db = client.db('occassionDB');
+    const collection = db.collection('events');
+    collection.updateOne({ _id: ObjectId(req.body.guestevent) },
+      { $push: { seatingPlan: { roomNumber: req.body.rooms, tableNumber: req.body.seatTable, seatedBy: ObjectId(req.body.gie), seatNumber: req.body.seatSeat } } }
+    );
+  });
+  Event.findOne({ _id: ObjectId(req.body.guestevent) }, (error, event) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(event);
+      event.update({ $addToSet: { roomNumber: 5 } });
+    }
+  });
+  Event.updateOne({ _id: ObjectId(req.body.guestevent) },
+    { $push: { seatingPlan: { roomNumber: req.body.rooms, tableNumber: req.body.seatTable, seatedBy: ObjectId(req.body.gie), seatNumber: req.body.seatSeat } } }
+  );
+  /* Event.findOne({ _id: Object(req.body.guestevent) }, { seatingPlan: { roomNumber: req.body.rooms, tableNumber: req.body.seatTable, seatedBy: req.body.gie, seatNumber: req.body.seatSeat } }, (error, event) => {
     if (error) {
       console.log(error);
     } else {
       console.log(event);
       res.redirect('/event');
     }
-  });
+  }); */
+  res.redirect('/event');
 });
 
 // create rooms with tables
@@ -461,7 +489,7 @@ const room3 = new Room({
     {
       number: 9,
       availability: true,
-      seatsAvailable: 4
+      seatsAvailable: 3
     },
     {
       number: 10,
@@ -593,15 +621,15 @@ const newEvent1 = new Event({
     },
     {
       roomNumber: 1,
-      tableNumber: 2,
+      tableNumber: 1,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
       seatNumber: 2
     },
     {
       roomNumber: 1,
-      tableNumber: 3,
+      tableNumber: 1,
       seatedBy: ObjectId('63e6a32b3f0f02f16a90b058'),
-      seatNumber: 2
+      seatNumber: 3
     }
   ]
 });
@@ -634,7 +662,7 @@ const newEvent2 = new Event({
 });
 
 const newEvent3 = new Event({
-  name: 'Wedding Anniversary for Joe',
+  name: 'Wedding Anniversary for Dean',
   date: new Date('2023-06-19'),
   reserved: ObjectId('63e4243416c203cb388945e3'),
   roomNumber: [4],

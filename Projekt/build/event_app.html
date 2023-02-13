@@ -113,7 +113,7 @@
       <br></br>
 
       <div class="container">
-        <form id="event-form">
+        <form action="/new-event" method="post">
       
           <label for="ename">Event Name</label>
           <input type="text" id="ename" name="ename" placeholder="Name..">
@@ -133,9 +133,9 @@
       <br></br>
 
       <div class="container">
-        <form action="/new-placement" method="post" onload="getEventOptions()">
+        <form action="/new-placement" method="post" id="event-form" onload="getEventOptions()">
       
-          <label for="fname">Select Guest to put in Event</label>
+          <label for="gie">Select Guest to put in Event</label>
           <select id="gie" name="gie">
             
             </select>

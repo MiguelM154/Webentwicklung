@@ -53,7 +53,7 @@ async function sendData (data) {
   return result;
 }
 
-async function sendDataForEvent (data) {
+/* async function sendDataForEvent (data) {
   const response = await fetch('/data-guest-event', {
     method: 'POST',
     headers: {
@@ -64,7 +64,7 @@ async function sendDataForEvent (data) {
   const result = await response.json();
   console.log(result);
   return result;
-}
+} */
 
 /* function getDataTables () {
   fetch('/api/dataEvent')
@@ -106,30 +106,56 @@ function getEventOptions () {
           selectGuestOptions.appendChild(opt);
         }
       }
-      sendDataForEvent({ da: objects.filteredGuests[0]._id, dt: objects.filteredEvents[0]._id })
+      const guestObject = objects.filteredGuests[0];
+
+      const selectEventOptions = document.getElementById('guestevent');
+      let count = 0;
+      for (let i = 0; i < objects.filteredEvents.length; i++) {
+        let isTrue = false;
+        for (let g = 0; g < objects.filteredEvents[i].seatingPlan.length; g++) {
+          if (String(guestObject._id) === String(objects.filteredEvents[i].seatingPlan[g].seatedBy)) {
+            isTrue = true;
+          }
+        }
+        if (isTrue === false) {
+          const opt = document.createElement('option');
+          opt.value = objects.filteredEvents[i]._id;
+          opt.innerHTML = objects.filteredEvents[i].name;
+          selectEventOptions.appendChild(opt);
+          count++;
+        }
+      }
+      /* sendDataForEvent({ da: objects.filteredGuests[0]._id, dt: objects.filteredEvents[0]._id })
         .then(result => {
           console.log(result);
         })
         .catch(error => {
           console.error(error);
-        });
-      if (objects.filteredEvents.length !== 0) {
-        for (let i = 0; i < objects.filteredEvents.length; i++) {
+        }); */
+      if (count > 0) {
+        /* for (let i = 0; i < objects.filteredEvents.length; i++) {
           const selectTableOptions = document.getElementById('guestevent');
           const opt = document.createElement('option');
           opt.value = objects.filteredEvents[i]._id;
           opt.innerHTML = objects.filteredEvents[i].name;
           selectTableOptions.appendChild(opt);
-        }
+        } */
         const selectRoomOptions = document.getElementById('rooms');
-        for (let i = 0; i < objects.filteredEvents[0].roomNumber.length; i++) {
+        let firstevent;
+        for (let i = 0; i < objects.filteredEvents.length; i++) {
+          if (String(objects.filteredEvents[i]._id) === String(selectEventOptions[0].value)) {
+            firstevent = objects.filteredEvents[i];
+            break;
+          }
+        }
+        for (let i = 0; i < firstevent.roomNumber.length; i++) {
           const optRoom = document.createElement('option');
-          console.log(objects.filteredEvents[0].roomNumber[i] + ' ' + i);
-          optRoom.value = objects.filteredEvents[0].roomNumber[i];
-          optRoom.innerHTML = objects.filteredEvents[0].roomNumber[i];
+          console.log(firstevent.roomNumber[i] + ' ' + i);
+          optRoom.value = firstevent.roomNumber[i];
+          optRoom.innerHTML = firstevent.roomNumber[i];
           selectRoomOptions.appendChild(optRoom);
         }
-        const roomnumber = objects.filteredEvents[0].roomNumber[0];
+        const roomnumber = firstevent.roomNumber[0];
         let room;
         for (let i = 0; i < objects.rooms.length; i++) {
           if (objects.rooms[i].number === roomnumber) {
@@ -146,12 +172,28 @@ function getEventOptions () {
         }
         const selectSeatOptions = document.getElementById('seatSeat');
         selectSeatOptions.options.length = 0;
+        const listOfAvailableSeats = [];
+        console.log(firstevent);
+        console.log(firstevent.seatingPlan.length);
+        for (let i = 0; i < firstevent.seatingPlan.length; i++) {
+          console.log(firstevent.seatingPlan[0].seatNumber);
+          listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+        }
+        console.log(listOfAvailableSeats);
         for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
-          const optSeat = document.createElement('option');
-          const seatData = i + 1;
-          optSeat.value = seatData;
-          optSeat.innerHTML = i + 1;
-          selectSeatOptions.appendChild(optSeat);
+          let isTrue1 = false;
+          for (let g = 0; g < listOfAvailableSeats.length; g++) {
+            if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
+              isTrue1 = true;
+            }
+          }
+          if (isTrue1 === false) {
+            const optSeat = document.createElement('option');
+            const seatData = i + 1;
+            optSeat.value = seatData;
+            optSeat.innerHTML = i + 1;
+            selectSeatOptions.appendChild(optSeat);
+          }
         }
       }
     }
@@ -198,8 +240,10 @@ window.onload = function () {
         const selectedOption = selectElement.options[selectedIndex];
         const selectedValue = selectedOption.value;
         let selectedEvent;
+        let firstevent;
         for (let i = 0; i < objects.filteredEvents.length; i++) {
           if (String(selectedValue) === String(objects.filteredEvents[i]._id)) {
+            firstevent = objects.filteredEvents[i];
             roomnumber = objects.filteredEvents[i].roomNumber[0];
             selectedEvent = objects.filteredEvents[i];
             break;
@@ -230,15 +274,125 @@ window.onload = function () {
         }
         const selectSeatOptions = document.getElementById('seatSeat');
         selectSeatOptions.options.length = 0;
+        const listOfAvailableSeats = [];
+        for (let i = 0; i < firstevent.seatingPlan.length; i++) {
+          console.log(firstevent.seatingPlan[0].seatNumber);
+          listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+        }
+        console.log(listOfAvailableSeats);
         for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
-          const optSeat = document.createElement('option');
-          const seatData = {
-            tableNumber: room.tables[0].number,
-            seatNumber: i + 1
-          };
-          optSeat.value = seatData;
-          optSeat.innerHTML = i + 1;
-          selectSeatOptions.appendChild(optSeat);
+          let isTrue1 = false;
+          for (let g = 0; g < listOfAvailableSeats.length; g++) {
+            if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
+              isTrue1 = true;
+            }
+          }
+          if (isTrue1 === false) {
+            const optSeat = document.createElement('option');
+            const seatData = i + 1;
+            optSeat.value = seatData;
+            optSeat.innerHTML = i + 1;
+            selectSeatOptions.appendChild(optSeat);
+          }
+        }
+      }
+      );
+  });
+
+  // listen to changes in Guest selector
+
+  const selectedGuest = document.getElementById('gie');
+
+  selectedGuest.addEventListener('change', function (event) {
+    fetch('/api/dataEvent')
+      .then((res) => res.json())
+      .then((res) => {
+        const stringifiedObject = JSON.stringify(res);
+        const objects = JSON.parse(stringifiedObject);
+        const selectElement = event.target;
+        const selectedIndex = selectElement.selectedIndex;
+        const selectedOption = selectElement.options[selectedIndex];
+        const selectedValue = selectedOption.value;
+        const guestObject = selectedValue;
+        const selectEventOptions = document.getElementById('guestevent');
+        selectEventOptions.options.length = 0;
+        let firstevent;
+        for (let i = 0; i < objects.filteredEvents.length; i++) {
+          let isTrue = false;
+          for (let g = 0; g < objects.filteredEvents[i].seatingPlan.length; g++) {
+            if (String(guestObject) === String(objects.filteredEvents[i].seatingPlan[g].seatedBy)) {
+              isTrue = true;
+            }
+          }
+          if (isTrue === false) {
+            const opt = document.createElement('option');
+            opt.value = objects.filteredEvents[i]._id;
+            opt.innerHTML = objects.filteredEvents[i].name;
+            selectEventOptions.appendChild(opt);
+          }
+        }
+        let selectedEvent;
+        if (typeof selectEventOptions[0] !== 'undefined') {
+          for (let i = 0; i < objects.filteredEvents.length; i++) {
+            if (String(selectEventOptions[0].value) === String(objects.filteredEvents[i]._id)) {
+              firstevent = objects.filteredEvents[i];
+              selectedEvent = objects.filteredEvents[i];
+            }
+          }
+          const roomnumber = selectedEvent.roomNumber[0];
+          const selectRoomOptions = document.getElementById('rooms');
+          selectRoomOptions.options.length = 0;
+          for (let i = 0; i < selectedEvent.roomNumber.length; i++) {
+            const optRoom = document.createElement('option');
+            optRoom.value = selectedEvent.roomNumber[i];
+            optRoom.innerHTML = selectedEvent.roomNumber[i];
+            selectRoomOptions.appendChild(optRoom);
+          }
+          let room;
+          for (let i = 0; i < objects.rooms.length; i++) {
+            if (objects.rooms[i].number === roomnumber) {
+              room = objects.rooms[i];
+              break;
+            }
+          }
+          const selectTableOptions = document.getElementById('seatTable');
+          selectTableOptions.options.length = 0;
+          for (let i = 0; i < room.tables.length; i++) {
+            const optTable = document.createElement('option');
+            optTable.value = room.tables[i].number;
+            optTable.innerHTML = i + 1;
+            selectTableOptions.appendChild(optTable);
+          }
+          const selectSeatOptions = document.getElementById('seatSeat');
+          selectSeatOptions.options.length = 0;
+          const listOfAvailableSeats = [];
+          for (let i = 0; i < firstevent.seatingPlan.length; i++) {
+            console.log(firstevent.seatingPlan[0].seatNumber);
+            listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+          }
+          console.log(listOfAvailableSeats);
+          for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
+            let isTrue1 = false;
+            for (let g = 0; g < listOfAvailableSeats.length; g++) {
+              if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
+                isTrue1 = true;
+              }
+            }
+            if (isTrue1 === false) {
+              const optSeat = document.createElement('option');
+              const seatData = i + 1;
+              optSeat.value = seatData;
+              optSeat.innerHTML = i + 1;
+              selectSeatOptions.appendChild(optSeat);
+            }
+          }
+        } else {
+          const selectRoomOptions = document.getElementById('rooms');
+          selectRoomOptions.options.length = 0;
+          const selectTableOptions = document.getElementById('seatTable');
+          selectTableOptions.options.length = 0;
+          const selectSeatOptions = document.getElementById('seatSeat');
+          selectSeatOptions.options.length = 0;
         }
       }
       );
@@ -273,17 +427,36 @@ window.onload = function () {
           optTable.innerHTML = i + 1;
           selectTableOptions.appendChild(optTable);
         }
+        const form = document.getElementById('event-form');
+        console.log(form.elements);
+        let firstevent;
+        for (let i = 0; i < objects.filteredEvents.length; i++) {
+          if (String(form.elements.guestevent.value) === String(objects.filteredEvents[i]._id)) {
+            firstevent = objects.filteredEvents[i];
+          }
+        }
         const selectSeatOptions = document.getElementById('seatSeat');
         selectSeatOptions.options.length = 0;
+        const listOfAvailableSeats = [];
+        for (let i = 0; i < firstevent.seatingPlan.length; i++) {
+          console.log(firstevent.seatingPlan[0].seatNumber);
+          listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+        }
+        console.log(listOfAvailableSeats);
         for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
-          const optSeat = document.createElement('option');
-          const seatData = {
-            tableNumber: room.tables[0].number,
-            seatNumber: i + 1
-          };
-          optSeat.value = seatData;
-          optSeat.innerHTML = i + 1;
-          selectSeatOptions.appendChild(optSeat);
+          let isTrue1 = false;
+          for (let g = 0; g < listOfAvailableSeats.length; g++) {
+            if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
+              isTrue1 = true;
+            }
+          }
+          if (isTrue1 === false) {
+            const optSeat = document.createElement('option');
+            const seatData = i + 1;
+            optSeat.value = seatData;
+            optSeat.innerHTML = i + 1;
+            selectSeatOptions.appendChild(optSeat);
+          }
         }
       }
       );
@@ -305,27 +478,52 @@ window.onload = function () {
         const selectedValue = selectedOption.value;
         const selectSeatOptions = document.getElementById('seatSeat');
         selectSeatOptions.options.length = 0;
-        let targetedTable;
-        let roomnumber;
+        // let targetedTable;
+        let roomnum;
         for (let i = 0; i < objects.rooms.length; i++) {
           for (let g = 0; g < objects.rooms[i].tables.length; g++) {
             if (Number(selectedValue) === Number(objects.rooms[i].tables[g].number)) {
-              targetedTable = objects.rooms[i].tables[g];
-              roomnumber = objects.rooms[i].number;
+              // targetedTable = objects.rooms[i].tables[g];
+              roomnum = objects.rooms[i];
               break;
             }
           }
         }
-        for (let i = 0; i < targetedTable.seatsAvailable; i++) {
-          const optSeat = document.createElement('option');
-          const seatData = {
-            roomNumber: roomnumber,
-            tableNumber: targetedTable.number,
-            seatNumber: i + 1
-          };
-          optSeat.value = seatData;
-          optSeat.innerHTML = i + 1;
-          selectSeatOptions.appendChild(optSeat);
+        const selectTableOptions = document.getElementById('seatTable');
+        selectTableOptions.options.length = 0;
+        for (let i = 0; i < roomnum.tables.length; i++) {
+          const optTable = document.createElement('option');
+          optTable.value = roomnum.tables[i].number;
+          optTable.innerHTML = i + 1;
+          selectTableOptions.appendChild(optTable);
+        }
+        const form = document.getElementById('event-form');
+        console.log(form.elements);
+        let firstevent;
+        for (let i = 0; i < objects.filteredEvents.length; i++) {
+          if (String(form.elements.guestevent.value) === String(objects.filteredEvents[i]._id)) {
+            firstevent = objects.filteredEvents[i];
+          }
+        }
+        const listOfAvailableSeats = [];
+        for (let i = 0; i < firstevent.seatingPlan.length; i++) {
+          console.log(firstevent.seatingPlan[0].seatNumber);
+          listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+        }
+        for (let i = 0; i < roomnum.tables[0].seatsAvailable; i++) {
+          let isTrue1 = false;
+          for (let g = 0; g < listOfAvailableSeats.length; g++) {
+            if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
+              isTrue1 = true;
+            }
+          }
+          if (isTrue1 === false) {
+            const optSeat = document.createElement('option');
+            const seatData = i + 1;
+            optSeat.value = seatData;
+            optSeat.innerHTML = i + 1;
+            selectSeatOptions.appendChild(optSeat);
+          }
         }
       }
       );
@@ -434,7 +632,7 @@ window.onload = function () {
       );
   });
 
-  const form = document.getElementById('event-form');
+  /* const form = document.getElementById('event-form');
   form.addEventListener('submit', function (event) {
     event.preventDefault();
 
@@ -444,7 +642,7 @@ window.onload = function () {
     for (let i = 0; i < formElements.length; i++) {
       console.log(formElements[i].name + ':' + formElements[i].value);
     }
-  });
+  }); */
 
   // submitting a form
 
