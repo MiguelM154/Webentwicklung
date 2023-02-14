@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "minifyJS": "cp public/java.js build/public/",
+    "minifyJS": "esbuild public/java.js --bundle --platform=node --minify --outfile=build/public/java.js",
     "minifyCSS": "esbuild public/style.css --minify --platform=node --outfile=build/public/style.css",
     "debug-files": "esbuild public/java.js --bundle --platform=node --outfile=build/public/java.js && esbuild public/style.css --outfile=build/public/style.css",
     "clean": "rm -f build/public/style.css && rm -f build/public/java.js && rm -f package-lock.json && rm -r node_modules",
@@ -20,7 +20,7 @@
     "esbuild": "^0.16.8",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
-    "mongoose": "^6.8.2",
+    "mongoose": "^6.9.1",
     "semistandard": "^16.0.1"
   },
   "devDependencies": {

@@ -43,6 +43,10 @@ app.get('/login', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build/login.html'));
 });
 
+app.get('/block', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build/loginblock.html'));
+});
+
 app.get('/application', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build/application.html'));
 });
@@ -222,7 +226,7 @@ app.post('/login', (req, res) => {
 app.get('/event', (req, res) => {
   User.findById(req.session.userId, (error, user) => {
     if (error || !user) {
-      return res.redirect('/');
+      return res.redirect('/block');
     } else {
       res.sendFile(path.resolve(__dirname, 'build/event_app.html'));
     }
@@ -607,11 +611,11 @@ Room.findOne({ number: room4.number }, (error, exists) => {
 
 // test ground for after
 
-const objectId = new ObjectId('63dd81e8ee30441365a8a48c');
+/*const objectId = new ObjectId('63dd81e8ee30441365a8a48c');
 Event.findOne({ objectId }, (err, doc) => {
   if (err) {
     console.log(err);
   } else {
     console.log(doc);
   }
-});
+});*/
