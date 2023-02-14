@@ -441,21 +441,41 @@ app.post('/new-placement', (req, res) => {
 // delete event from collection "events"
 
 app.post('/delete-event', function (req, res) {
-  Event.findOne({ _id: req.body.custId}, (error, exists) => {
+  Event.findOne({ _id: req.body.eventId }, (error, exists) => {
     if (error) {
       console.log(error);
     } else if (exists) {
-        const idofEventToDelete = {_id: req.body.custId };
+        const idofEventToDelete = {_id: req.body.eventId};
         Event.remove(idofEventToDelete,(error) => {
         if (error) {
           console.log(error);
         } else {
-          console.log('Event "' + req.body.custId + '" wurde geloescht.');
+          console.log('Event "' + req.body.eventId + '" wurde geloescht.');
+          res.redirect('/delevent');
+        }
+      });    
+    }
+  });
+});
+
+// remove Gast from collection "guests"
+
+app.post('/delete-gast', function (req, res) {
+  Guest.findOne({ _id: req.body.gastid }, (error, exists) => {
+    if (error) {
+      console.log(error);
+    } else if (exists) {
+        const idofGuestToDelete = { _id: req.body.gastid };
+        Guest.remove(idofGuestToDelete, (error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Gast "' + req.body.gastid + '" wurde geloescht.');
           res.redirect('/delevent');
         }
       });    
     } else {
-      console.log('Event existiert nicht');
+      console.log('Gast existiert nicht');
     }
   });
 });

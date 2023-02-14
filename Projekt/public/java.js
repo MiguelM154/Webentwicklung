@@ -19,14 +19,13 @@ function getData () {
 }
 getData();
 
-function getDataForDelete() {
+function getDataForDelete () {
   fetch('/api/dataEvent')
     .then((res) => res.json())
     .then((res) => {
       const stringifiedObject = JSON.stringify(res);
       const objects = JSON.parse(stringifiedObject);
       const table = document.getElementById('del-data-event');
-      const button = document.createElement('button');
       for (const element of objects.filteredEvents) {
         const row = table.insertRow();
         const cell1 = row.insertCell(0);
@@ -36,7 +35,7 @@ function getDataForDelete() {
         cell1.innerHTML = element.name;
         cell2.innerHTML = element.date;
         cell3.innerHTML = element.roomNumber;
-        cell4.innerHTML = '<form action="/delete-event" method="post"><input type="hidden" id="custId" name="custId" value="' + element._id + '"><input type="submit" value="Event Löschen"></form>';
+        cell4.innerHTML = '<form action="/delete-event" method="post"><input type="hidden" id="eventId" name="eventId" value="' + element._id + '"><input type="submit" value="Event Löschen"></form>';
       }
     }
     );
@@ -63,6 +62,29 @@ function getDataGuest () {
     );
 }
 getDataGuest();
+
+function getDataGuestForDelete () {
+  fetch('/api/dataEvent')
+    .then((res) => res.json())
+    .then((res) => {
+      const stringifiedObject = JSON.stringify(res);
+      const objects = JSON.parse(stringifiedObject);
+      const table = document.getElementById('del-data-guest');
+      for (const element of objects.filteredGuests) {
+        const row = table.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+        const cell4 = row.insertCell(3);
+        cell1.innerHTML = element.name;
+        cell2.innerHTML = element.child;
+        cell3.innerHTML = element.status;
+        cell4.innerHTML = '<form action="/delete-gast" method="post"><input type="hidden" id="gastid" name="gastid" value="' + element._id + '"><input type="submit" value="Gast entfernen"></form>';
+      }
+    }
+    );
+}
+getDataGuestForDelete();
 
 async function sendData (data) {
   const response = await fetch('/data', {
