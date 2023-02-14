@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-mongoose.connect('mongodb://localhost:27017/occassionDB', { useNewUrlParser: true });
+mongoose.connect('mongodb://127.0.0.1:27017/occassionDB', { useNewUrlParser: true });
 
 app.listen(port[2] || 8080, () => {
 
