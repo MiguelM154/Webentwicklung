@@ -165,7 +165,7 @@ const SeatSchema = new mongoose.Schema({
 const eventSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   date: {
     type: Date,
@@ -229,6 +229,18 @@ app.get('/event', (req, res) => {
       return res.redirect('/block');
     } else {
       res.sendFile(path.resolve(__dirname, 'build/event_app.html'));
+    }
+  });
+});
+
+// authenticate user to get to event
+
+app.get('/delevent', (req, res) => {
+  User.findById(req.session.userId, (error, user) => {
+    if (error || !user) {
+      return res.redirect('/block');
+    } else {
+      res.sendFile(path.resolve(__dirname, 'build/delevent.html'));
     }
   });
 });
@@ -426,6 +438,28 @@ app.post('/new-placement', (req, res) => {
   res.redirect('/event');
 });
 
+// delete event from collection "events"
+
+app.post('/delete-event', function (req, res) {
+  Event.findOne({ _id: req.body.custId}, (error, exists) => {
+    if (error) {
+      console.log(error);
+    } else if (exists) {
+        const idofEventToDelete = {_id: req.body.custId };
+        Event.remove(idofEventToDelete,(error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Event "' + req.body.custId + '" wurde geloescht.');
+          res.redirect('/delevent');
+        }
+      });    
+    } else {
+      console.log('Event existiert nicht');
+    }
+  });
+});
+
 // create rooms with tables
 
 const room1 = new Room({
@@ -611,11 +645,13 @@ Room.findOne({ number: room4.number }, (error, exists) => {
 
 // test ground for after
 
-/*const objectId = new ObjectId('63dd81e8ee30441365a8a48c');
+/* 
+const objectId = new ObjectId('63dd81e8ee30441365a8a48c');
 Event.findOne({ objectId }, (err, doc) => {
   if (err) {
     console.log(err);
   } else {
     console.log(doc);
   }
-});*/
+}); 
+*/

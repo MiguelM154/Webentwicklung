@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <title>True IT GmbH</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" media="screen">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300&display=swap" rel="stylesheet">
+    <script src="java.js" type="application/javascript"></script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul class="navbar">
+                <li class="navitem"><a href="/">Home</a></li>
+
+                <li class="navitem"><a href="#">Event</a>
+                    <ul>
+                        <li class="dropdown"><a href="event">Event planen</a></li>
+                        <li class="dropdown"><a href="delevent">Event löschen</a></li>
+                    </ul>
+                </li>
+
+                <li class="navitem"><a href="#">Anmeldung</a>
+                    <ul>
+                        <li class="dropdown"><a href="login">Login</a></li>
+                        <li class="dropdown"><a href="register">Registrierung</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!--    Content Anfang          -->
+
+    <table id="del-data-event" onload="getDataForDelete()" aria-label="tableDataEvent">
+        <th>Events</th>
+    <tr>
+        <th>Name</th>
+        <th>Datum</th>
+        <th>Raum</th>
+        <th>Löschen</th>
+    </tr>
+    </table>
+
+    <!--    Content Ende    -->
+
+    <footer>
+        <div class="foot">
+            <ul class="footer-nav">
+
+                <li><a href="#">Home</a></li>
+                <li><a href="team.html">Über uns</a></li>
+                <li><a href="kontakt.html">Kontakt</a></li>
+                <li><a href="endgeraete.html">Produkte</a></li>
+
+            </ul>
+            <br />
+            <ul class="footer-social">
+                <li>
+                    <a href="#"><img src="images/facebook.png" alt="Facebook" class="image"></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/twitter.png" alt="Twitter" class="image"></a>
+                </li>
+                <li>
+                    <a href="#"><img src="images/instagram.png" alt="instagram" class="image"></a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+</body>
+
+</html>
