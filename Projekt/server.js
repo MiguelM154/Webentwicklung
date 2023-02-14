@@ -269,7 +269,7 @@ app.get('/api/dataEvent', (req, res) => {
 
 app.post('/new-guest', (req, res) => {
   let isTrue;
-  if (req.isChild === 'true') {
+  if (req.body.isChild === 'true') {
     isTrue = true;
   } else {
     isTrue = false;
