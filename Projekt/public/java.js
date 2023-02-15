@@ -1,3 +1,16 @@
+function getDateStr (str) {
+  const tempstr = str.split('-').slice(0, 3).join('-');
+  const reverseDate = tempstr.split('T').slice(0, 1);
+  return reverseDate;
+}
+
+function getTimeStr (str) {
+  const tempstr = str.split('T').slice(1, 2);
+  //console.log(tempstr.slice(0,4));
+  //const time = tempstr.split('.').slice(0, 1);
+  return tempstr;
+}
+
 function getData () {
   fetch('/api/dataEvent')
     .then((res) => res.json())
@@ -10,9 +23,12 @@ function getData () {
         const cell1 = row.insertCell(0);
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
+        const cell4 = row.insertCell(3);
         cell1.innerHTML = objects.filteredEvents[i].name;
-        cell2.innerHTML = objects.filteredEvents[i].date;
-        cell3.innerHTML = objects.filteredEvents[i].roomNumber;
+        const Datestr = (objects.filteredEvents[i].date).toString();
+        cell2.innerHTML = getDateStr(Datestr);
+        cell3.innerHTML = getTimeStr(Datestr);
+        cell4.innerHTML = objects.filteredEvents[i].roomNumber;
       }
     }
     );
@@ -32,10 +48,13 @@ function getDataForDelete () {
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
         const cell4 = row.insertCell(3);
+        const cell5 = row.insertCell(4);
         cell1.innerHTML = element.name;
-        cell2.innerHTML = element.date;
-        cell3.innerHTML = element.roomNumber;
-        cell4.innerHTML = '<form action="/delete-event" method="post"><input type="hidden" id="eventId" name="eventId" value="' + element._id + '"><input type="submit" value="Event Löschen"></form>';
+        const Datestr2 = (element.date).toString();
+        cell2.innerHTML = getDateStr(Datestr2);
+        cell3.innerHTML = getTimeStr(Datestr2);
+        cell4.innerHTML = element.roomNumber;
+        cell5.innerHTML = '<form action="/delete-event" method="post"><input type="hidden" id="eventId" name="eventId" value="' + element._id + '"><input type="submit" value="Event Löschen"></form>';
       }
     }
     );
@@ -112,7 +131,16 @@ async function sendData (data) {
   return result;
 } */
 
-/* function getDataTables () {
+
+/* function "getDataTables()" needs check if seats avaible then countdown seats until no more remaining */
+
+/*function checkIfSeatAvaible(seatsavaible) {
+  
+}*/
+
+/* Change by miguel => instead of ".guests" --> ".tables" */
+
+ /*function getDataTables () {
   fetch('/api/dataEvent')
     .then((res) => res.json())
     .then((res) => {
@@ -120,22 +148,22 @@ async function sendData (data) {
       const objects = JSON.parse(stringifiedObject);
       const table = document.getElementById('data-table');
       for (let i = 0; i < objects.filteredEvents.length; i++) {
-        for (let g = 0; g < objects.filteredEvents[i].guests.length; g++) {
+        for (let g = 0; g < objects.filteredEvents[i].tables.length; g++) {
           const row = table.insertRow();
           const cell1 = row.insertCell(0);
           const cell2 = row.insertCell(1);
           const cell3 = row.insertCell(2);
           const cell4 = row.insertCell(3);
           cell1.innerHTML = objects.filteredEvents[i].name;
-          cell2.innerHTML = objects.filteredEvents[i].guests[g].name;
-          cell3.innerHTML = objects.filteredEvents[i].guests[g].seatNumber.table;
-          cell4.innerHTML = objects.filteredEvents[i].guests[g].seatNumber.seat;
+          cell2.innerHTML = objects.filteredEvents[i].tables[g].number;
+          cell3.innerHTML = objects.filteredEvents[i].tables[g].seatNumber.table; still bad 
+          cell4.innerHTML = objects.filteredEvents[i].tables[g].seatNumber.seat; still bad 
         }
       }
     }
     );
 }
-getDataTables(); */
+getDataTables();*/
 
 function getEventOptions () {
   fetch('/api/dataEvent')

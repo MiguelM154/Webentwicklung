@@ -165,7 +165,7 @@ const SeatSchema = new mongoose.Schema({
 const eventSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   date: {
     type: Date,
@@ -446,7 +446,7 @@ app.post('/delete-event', function (req, res) {
       console.log(error);
     } else if (exists) {
         const idofEventToDelete = {_id: req.body.eventId};
-        Event.remove(idofEventToDelete,(error) => {
+        Event.deleteOne(idofEventToDelete,(error) => {
         if (error) {
           console.log(error);
         } else {
@@ -466,7 +466,7 @@ app.post('/delete-gast', function (req, res) {
       console.log(error);
     } else if (exists) {
         const idofGuestToDelete = { _id: req.body.gastid };
-        Guest.remove(idofGuestToDelete, (error) => {
+        Guest.deleteOne(idofGuestToDelete, (error) => {
         if (error) {
           console.log(error);
         } else {

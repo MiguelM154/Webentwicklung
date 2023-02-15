@@ -37,35 +37,36 @@
 
     <!--    Content Anfang   -->
 
-    <table id="data-event" onload="getData()">
+    <table id="data-event" onload="getData()" aria-label="EventTabelle">
         <th>Events</th>
     <tr>
         <th>Name</th>
         <th>Datum</th>
+        <th>Zeit</th>
         <th>Raum</th>
     </tr>
     </table>
 
     <br></br>
 
-    <table id="data-guest" onload="getDataGuest()">
-            <th>Guests</th>
+    <table id="data-guest" onload="getDataGuest()" aria-label="Gasttabelle">
+            <th>Gaeste</th>
         <tr>
-          <th>Guest Name</th>
-          <th>Child</th>
+          <th>Gast Name</th>
+          <th>Minderjaehrig</th>
           <th>Status</th>
         </tr>
       </table>
 
       <br></br>
 
-    <table id="data-table" onload="getDataTables()">
-        <th>Table Placement</th>
+    <table id="data-table" onload="getDataTables()" aria-label="TischordnungTabelle">
+        <th>Tischordnung</th>
         <tr>
             <th>Event</th>
-          <th>Guest Name</th>
-          <th>Table</th>
-          <th>Seat</th>
+          <th>Gast Name</th>
+          <th>Tisch</th>
+          <th>Sitzplatz</th>
         </tr>
       </table>
 
@@ -74,21 +75,21 @@
       <div class="container">
         <form action="/new-guest" method="post">
       
-          <label for="name">Guest Name</label>
+          <label for="name">Gast Name</label>
           <input type="text" id="name" name="name" placeholder="Name..">
       
-          <label for="isChild">Is guest a child ?</label>
+          <label for="isChild">Ist der Gast minderjaehrig ?</label>
           <select id="isChild" name="isChild">
-            <option value="true">Yes</option>
-            <option value="false">No</option>
+            <option value="true">Ja</option>
+            <option value="false">Nein</option>
           </select>
 
           <label for="gstatus">Status</label>
             <select id="gstatus" name="gstatus">
-            <option value="Invited">Invited</option>
-            <option value="Declined">Declined</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Attended">Attended</option>
+            <option value="Invited">Eingeladen</option>
+            <option value="Declined">Abgelehnt</option>
+            <option value="Confirmed">Bestätigt</option>
+            <option value="Attended">Teilgenommen</option>
             </select>
       
           <input type="submit" value="Submit">
@@ -104,8 +105,8 @@
           <label for="ename">Event Name</label>
           <input type="text" id="ename" name="ename" placeholder="Name..">
 
-          <label for="date">Date</label>
-          <input type="date" id="edate" name="edate">
+          <label for="date">Datum</label>
+          <input type="datetime-local" id="edate" name="edate">
 
           <br></br>
           
@@ -121,7 +122,7 @@
       <div class="container">
         <form action="/new-placement" method="post" id="event-form" onload="getEventOptions()">
       
-          <label for="gie">Select Guest to put in Event</label>
+          <label for="gie">Bitte waehlen sie den Gast für dieses Event aus</label>
           <select id="gie" name="gie">
             
             </select>
@@ -131,17 +132,17 @@
 
             </select>
 
-            <label for="rooms">Rooms</label>
+            <label for="rooms">Raeume</label>
             <select id="rooms" name="rooms">
 
             </select>
 
-            <label for="seatTable">Table</label>
+            <label for="seatTable">Tische</label>
             <select id="seatTable" name="seatTable">
 
             </select>
 
-            <label for="seatSeat">Seat</label>
+            <label for="seatSeat">Sitzplaetze</label>
             <select id="seatSeat" name="seatSeat">
                 
             </select>
