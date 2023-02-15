@@ -1,5 +1,5 @@
 * {
-    --purple: #a200ca;
+    --purple: #7851a9;
     --white: #f8f9f8;
     --dark_shade: #565761;
     margin: 0;
@@ -49,7 +49,7 @@ body {
 /* -------------- NAV BAR ------------- */
 
 nav {
-    background-color: var(--purple);
+    background-color: var(--dark_shade);
     margin: 0;
     padding: 0;
     width: 100%;
@@ -98,7 +98,7 @@ nav ul li ul {
     opacity: 0;
     transition: visibility 0s, opacity 0.5s linear;
     position: absolute;
-    background-color: var(--purple);
+    background-color: var(--dark_shade);
     padding: 5px;
     border-radius: 0px 0px 4px 4px ;
 }
@@ -152,14 +152,14 @@ nav ul li ul li a:hover {
 	font-size: 2rem;
 }
 
-.consulting_body,.repair_body
+.events
 {
 	text-align: center;
 	max-width: 450px;
 	margin: 0rem auto;
 }
 
-.conslting-repair
+.sectionsBelow
 {
 	max-width: 1000px;
 	margin-left: auto;
@@ -171,14 +171,14 @@ nav ul li ul li a:hover {
 
 .section-title_beratung,.section-title_repair
 {
-	color: var(--purple);
-    padding: 1rem;
+	color: var(--dark_shade);
+  padding: 1rem;
 }
 
 .icon-image
 {
-	max-width:70px;
-    max-height:70px;
+	max-width:400;
+  max-height:250px;
 }
 
 
@@ -193,7 +193,7 @@ nav ul li ul li a:hover {
 	justify-content: center;
 	margin-left: auto;
 	margin-right: auto;
-	color: var(--purple);
+	color: var(--dark_shade);
 }
 
 .footer-nav,.footer-social
@@ -239,7 +239,7 @@ footer a
 }
 
 footer {
-    background-color: var(--purple);
+    background-color: var(--dark_shade);
     color: var(--white);
     align-items: center;
     margin-top: auto;
@@ -386,4 +386,23 @@ span.psw {
     border-radius: 5px;
     background-color: #f2f2f2;
     padding: 20px;
+  }
+
+  .specialHeader1 { 
+    color: var(--white);
+    font-family: "Great Vibes", cursive;
+    font-size: 100px;
+    line-height: 160px;
+    font-weight: normal;
+    margin-bottom: 0px;
+    margin-top: 40px;
+    text-align: center; 
+    text-shadow: 0 1px 1px #fff; 
+  }
+
+  #backgroundImage{
+    background-image: url(https://github.com/MiguelM154/Webentwicklung/blob/main/images/backgroundImageForIndex.jpg?raw=true);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
   }
