@@ -16,17 +16,17 @@ function getData () {
       const stringifiedObject = JSON.stringify(res);
       const objects = JSON.parse(stringifiedObject);
       const table = document.getElementById('data-event');
-      for (let i = 0; i < objects.filteredEvents.length; i++) {
+      for (const element of objects.filteredEvents) {
         const row = table.insertRow();
         const cell1 = row.insertCell(0);
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
         const cell4 = row.insertCell(3);
-        cell1.innerHTML = objects.filteredEvents[i].name;
-        const Datestr = (objects.filteredEvents[i].date).toString();
+        cell1.innerHTML = element.name;
+        const Datestr = (element.date).toString();
         cell2.innerHTML = getDateStr(Datestr);
         cell3.innerHTML = getTimeStr(Datestr);
-        cell4.innerHTML = objects.filteredEvents[i].roomNumber;
+        cell4.innerHTML = element.roomNumber;
       }
     }
     );
@@ -66,14 +66,14 @@ function getDataGuest () {
       const stringifiedObject = JSON.stringify(res);
       const objects = JSON.parse(stringifiedObject);
       const table = document.getElementById('data-guest');
-      for (let i = 0; i < objects.filteredGuests.length; i++) {
+      for (const element of objects.filteredGuests) {
         const row = table.insertRow();
         const cell1 = row.insertCell(0);
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
-        cell1.innerHTML = objects.filteredGuests[i].name;
-        cell2.innerHTML = objects.filteredGuests[i].child;
-        cell3.innerHTML = objects.filteredGuests[i].status;
+        cell1.innerHTML = element.name;
+        cell2.innerHTML = element.child;
+        cell3.innerHTML = element.status;
       }
     }
     );
@@ -134,33 +134,6 @@ async function sendData (data) {
 /*function checkIfSeatAvaible(seatsavaible) {
   
 }*/
-
-/* Change by miguel => instead of ".guests" --> ".tables" */
-
- /*function getDataTables () {
-  fetch('/api/dataEvent')
-    .then((res) => res.json())
-    .then((res) => {
-      const stringifiedObject = JSON.stringify(res);
-      const objects = JSON.parse(stringifiedObject);
-      const table = document.getElementById('data-table');
-      for (let i = 0; i < objects.filteredEvents.length; i++) {
-        for (let g = 0; g < objects.filteredEvents[i].tables.length; g++) {
-          const row = table.insertRow();
-          const cell1 = row.insertCell(0);
-          const cell2 = row.insertCell(1);
-          const cell3 = row.insertCell(2);
-          const cell4 = row.insertCell(3);
-          cell1.innerHTML = objects.filteredEvents[i].name;
-          cell2.innerHTML = objects.filteredEvents[i].tables[g].number;
-          cell3.innerHTML = objects.filteredEvents[i].tables[g].seatNumber.table; still bad 
-          cell4.innerHTML = objects.filteredEvents[i].tables[g].seatNumber.seat; still bad 
-        }
-      }
-    }
-    );
-}
-getDataTables();*/
 
 function getDataTables () {
   fetch('/api/dataEvent')
@@ -229,29 +202,31 @@ function getEventOptions () {
       const stringifiedObject = JSON.stringify(res);
       const objects = JSON.parse(stringifiedObject);
       if (objects.filteredGuests.length !== 0) {
-        for (let i = 0; i < objects.filteredGuests.length; i++) {
-          const selectGuestOptions = document.getElementById('gie');
-          const opt = document.createElement('option');
-          opt.value = objects.filteredGuests[i]._id;
-          opt.innerHTML = objects.filteredGuests[i].name;
-          selectGuestOptions.appendChild(opt);
+        for (const element of objects.filteredGuests) {
+          if (element.status == 'eingeladen' || element.status == 'zugesagt') {
+            const selectGuestOptions = document.getElementById('gie');
+            const opt = document.createElement('option');
+            opt.value = element._id;
+            opt.innerHTML = element.name;
+            selectGuestOptions.appendChild(opt);
+          }
         }
       }
       const guestObject = objects.filteredGuests[0];
 
       const selectEventOptions = document.getElementById('guestevent');
       let count = 0;
-      for (let i = 0; i < objects.filteredEvents.length; i++) {
+      for (const element of objects.filteredEvents) {
         let isTrue = false;
-        for (let g = 0; g < objects.filteredEvents[i].seatingPlan.length; g++) {
-          if (String(guestObject._id) === String(objects.filteredEvents[i].seatingPlan[g].seatedBy)) {
+        for (let g = 0; g < element.seatingPlan.length; g++) {
+          if (String(guestObject._id) === String(element.seatingPlan[g].seatedBy)) {
             isTrue = true;
           }
         }
         if (isTrue === false) {
           const opt = document.createElement('option');
-          opt.value = objects.filteredEvents[i]._id;
-          opt.innerHTML = objects.filteredEvents[i].name;
+          opt.value = element._id;
+          opt.innerHTML = element.name;
           selectEventOptions.appendChild(opt);
           count++;
         }
@@ -273,9 +248,9 @@ function getEventOptions () {
         } */
         const selectRoomOptions = document.getElementById('rooms');
         let firstevent;
-        for (let i = 0; i < objects.filteredEvents.length; i++) {
-          if (String(objects.filteredEvents[i]._id) === String(selectEventOptions[0].value)) {
-            firstevent = objects.filteredEvents[i];
+        for (const element of objects.filteredEvents) {
+          if (String(element._id) === String(selectEventOptions[0].value)) {
+            firstevent = element;
             break;
           }
         }
@@ -288,9 +263,9 @@ function getEventOptions () {
         }
         const roomnumber = firstevent.roomNumber[0];
         let room;
-        for (let i = 0; i < objects.rooms.length; i++) {
-          if (objects.rooms[i].number === roomnumber) {
-            room = objects.rooms[i];
+        for (const element of objects.rooms) {
+          if (element.number === roomnumber) {
+            room = element;
             break;
           }
         }
@@ -306,15 +281,15 @@ function getEventOptions () {
         const listOfAvailableSeats = [];
         console.log(firstevent);
         console.log(firstevent.seatingPlan.length);
-        for (let i = 0; i < firstevent.seatingPlan.length; i++) {
+        for (const element of firstevent.seatingPlan) {
           console.log(firstevent.seatingPlan[0].seatNumber);
-          listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+          listOfAvailableSeats.push(element.seatNumber);
         }
         console.log(listOfAvailableSeats);
         for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
           let isTrue1 = false;
-          for (let g = 0; g < listOfAvailableSeats.length; g++) {
-            if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
+          for (const element of listOfAvailableSeats) {
+            if (Number(element) === Number(i + 1)) {
               isTrue1 = true;
             }
           }

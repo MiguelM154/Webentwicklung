@@ -102,6 +102,11 @@ const tableSchema = {
   seatsAvailable: {
     type: Number,
     required: true
+  },
+  typeoftableseat: {
+    type: String,
+    enum: ['einseitig', 'zweiseitig'],
+    required: true
   }
 };
 
@@ -157,6 +162,11 @@ const SeatSchema = new mongoose.Schema({
   },
   seatNumber: {
     type: Number,
+    required: true
+  },
+  typeoftableseat: {
+    type: String,
+    enum: ['einseitig', 'zweiseitig'],
     required: true
   }
 });
@@ -522,17 +532,20 @@ const room1 = new Room({
     {
       number: 1,
       availability: true,
-      seatsAvailable: 4
+      seatsAvailable: 4,
+      typeoftableseat: 'einseitig'
     },
     {
       number: 2,
       availability: true,
-      seatsAvailable: 4
+      seatsAvailable: 4,
+      typeoftableseat: 'zweiseitig'
     },
     {
       number: 3,
       availability: true,
-      seatsAvailable: 2
+      seatsAvailable: 2,
+      typeoftableseat: 'zweiseitig'
     }
   ]
 });
@@ -547,22 +560,26 @@ const room2 = new Room({
     {
       number: 5,
       availability: true,
-      seatsAvailable: 4
+      seatsAvailable: 4,
+      typeoftableseat: 'einseitig'
     },
     {
       number: 6,
       availability: true,
-      seatsAvailable: 4
+      seatsAvailable: 4,
+      typeoftableseat: 'zweiseitig'
     },
     {
       number: 7,
       availability: true,
-      seatsAvailable: 2
+      seatsAvailable: 2,
+      typeoftableseat: 'zweiseitig'
     },
     {
       number: 8,
       availability: true,
-      seatsAvailable: 2
+      seatsAvailable: 2,
+      typeoftableseat: 'zweiseitig'
     }
   ]
 });
@@ -577,22 +594,26 @@ const room3 = new Room({
     {
       number: 9,
       availability: true,
-      seatsAvailable: 3
+      seatsAvailable: 3,
+      typeoftableseat: 'einseitig'
     },
     {
       number: 10,
       availability: true,
-      seatsAvailable: 4
+      seatsAvailable: 4,
+      typeoftableseat: 'zweiseitig'
     },
     {
       number: 11,
       availability: true,
-      seatsAvailable: 2
+      seatsAvailable: 2,
+      typeoftableseat: 'zweiseitig'
     },
     {
       number: 12,
       availability: true,
-      seatsAvailable: 2
+      seatsAvailable: 2,
+      typeoftableseat: 'zweiseitig'
     }
   ]
 });
@@ -607,22 +628,26 @@ const room4 = new Room({
     {
       number: 13,
       availability: true,
-      seatsAvailable: 4
+      seatsAvailable: 4,
+      typeoftableseat: 'einseitig'
     },
     {
       number: 14,
       availability: true,
-      seatsAvailable: 4
+      seatsAvailable: 4,
+      typeoftableseat: 'zweiseitig'
     },
     {
       number: 15,
       availability: true,
-      seatsAvailable: 2
+      seatsAvailable: 2,
+      typeoftableseat: 'zweiseitig'
     },
     {
       number: 16,
       availability: true,
-      seatsAvailable: 2
+      seatsAvailable: 2,
+      typeoftableseat: 'zweiseitig'
     }
   ]
 });
