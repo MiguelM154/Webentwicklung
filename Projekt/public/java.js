@@ -6,8 +6,6 @@ function getDateStr (str) {
 
 function getTimeStr (str) {
   const tempstr = str.split('T').slice(1, 2);
-  //console.log(tempstr.slice(0,4));
-  //const time = tempstr.split('.').slice(0, 1);
   return tempstr;
 }
 
@@ -131,7 +129,6 @@ async function sendData (data) {
   return result;
 } */
 
-
 /* function "getDataTables()" needs check if seats avaible then countdown seats until no more remaining */
 
 /*function checkIfSeatAvaible(seatsavaible) {
@@ -164,6 +161,66 @@ async function sendData (data) {
     );
 }
 getDataTables();*/
+
+function getDataTables () {
+  fetch('/api/dataEvent')
+    .then((res) => res.json())
+    .then(async (res) => {
+      const stringifiedObject = JSON.stringify(res);
+      const objects = JSON.parse(stringifiedObject);
+      const table = document.getElementById('data-table');
+      const arrayOfGaeste = [];
+      for (const getguest of objects.filteredGuests) {
+        arrayOfGaeste[getguest._id] = getguest.name;
+      }
+      for (const element of objects.filteredEvents) {
+        for (const key of element.seatingPlan) {
+          const row = table.insertRow();
+          const cell1 = row.insertCell(0);
+          const cell2 = row.insertCell(1);
+          const cell3 = row.insertCell(2);
+          const cell4 = row.insertCell(3);
+          cell1.innerHTML = element.name;
+          cell2.innerHTML = arrayOfGaeste[key.seatedBy];
+          cell3.innerHTML = key.tableNumber;
+          cell4.innerHTML = key.seatNumber; 
+        }
+      }
+    }
+    );
+}
+getDataTables();
+
+function getDataTablesForDelete () {
+  fetch('/api/dataEvent')
+    .then((res) => res.json())
+    .then(async (res) => {
+      const stringifiedObject = JSON.stringify(res);
+      const objects = JSON.parse(stringifiedObject);
+      const table = document.getElementById('del-data-table');
+      const arrayOfGaeste = [];
+      for (const getguest of objects.filteredGuests) {
+        arrayOfGaeste[getguest._id] = getguest.name;
+      }
+      for (const element of objects.filteredEvents) {
+        for (const key of element.seatingPlan) {
+          const row = table.insertRow();
+          const cell1 = row.insertCell(0);
+          const cell2 = row.insertCell(1);
+          const cell3 = row.insertCell(2);
+          const cell4 = row.insertCell(3);
+          const cell5 = row.insertCell(4);
+          cell1.innerHTML = element.name;
+          cell2.innerHTML = arrayOfGaeste[key.seatedBy];
+          cell3.innerHTML = key.tableNumber;
+          cell4.innerHTML = key.seatNumber;
+          cell5.innerHTML = '<form action="/delete-reserv" method="post"><input type="hidden" id="object" name="object" value="' + key + '"><input type="hidden" id="roomNumber" name="roomNumber" value="' + key.roomNumber + '"><input type="hidden" id="tableNumber" name="tableNumber" value="' + key.tableNumber + '"><input type="hidden" id="elemid" name="elemid" value="' + element._id + '"><input type="hidden" id="seatedBy" name="seatedBy" value="' + key.seatedBy + '"><input type="hidden" id="seatNumber" name="seatNumber" value="' + key.seatNumber + '"><input type="submit" value="Reservierung zuruecknehmen"></form>'; 
+        }
+      }
+    }
+    );
+}
+getDataTablesForDelete();
 
 function getEventOptions () {
   fetch('/api/dataEvent')

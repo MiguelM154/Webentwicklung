@@ -59,7 +59,8 @@ const guestSchema = new mongoose.Schema({
     required: true
   },
   child: {
-    type: Boolean,
+    type: String,
+    enum: ['Ja', 'Nein'],
     required: true
   },
   status: {
@@ -245,7 +246,7 @@ app.get('/delevent', (req, res) => {
   });
 });
 
-// get data for tables and forms
+// get data for tables and forms  5587948
 
 app.get('/api/dataEvent', (req, res) => {
   Event.find({}, function (err, events) {
@@ -284,15 +285,9 @@ app.get('/api/dataEvent', (req, res) => {
 // get Guestform data
 
 app.post('/new-guest', (req, res) => {
-  let isTrue;
-  if (req.body.isChild === 'true') {
-    isTrue = true;
-  } else {
-    isTrue = false;
-  }
   const newGuest = new Guest({
     name: req.body.name,
-    child: isTrue,
+    child: req.body.isChild,
     status: req.body.gstatus,
     user: req.session.userId
   });
@@ -404,7 +399,7 @@ app.post('/new-placement', (req, res) => {
   console.log(req.body.seatSeat);
   console.log(ObjectId(req.body.guestevent));
   const MongoClient = require('mongodb').MongoClient;
-  const uri = 'mongodb://localhost:27017/';
+  const uri = 'mongodb://127.0.0.1:27017/';
 
   MongoClient.connect(uri, function (err, client) {
     if (err) {
@@ -413,7 +408,15 @@ app.post('/new-placement', (req, res) => {
     const db = client.db('occassionDB');
     const collection = db.collection('events');
     collection.updateOne({ _id: ObjectId(req.body.guestevent) },
-      { $push: { seatingPlan: { roomNumber: req.body.rooms, tableNumber: req.body.seatTable, seatedBy: ObjectId(req.body.gie), seatNumber: req.body.seatSeat } } }
+      { $push: { 
+        seatingPlan: { 
+          roomNumber: req.body.rooms, 
+          tableNumber: req.body.seatTable, 
+          seatedBy: ObjectId(req.body.gie), 
+          seatNumber: req.body.seatSeat 
+          } 
+        } 
+      }
     );
   });
   Event.findOne({ _id: ObjectId(req.body.guestevent) }, (error, event) => {
@@ -478,6 +481,33 @@ app.post('/delete-gast', function (req, res) {
       console.log('Gast existiert nicht');
     }
   });
+});
+
+//Reservierung Löschen
+app.post('/delete-reserv', function (req, res) {
+  const ObjectId = require('mongodb').ObjectId;
+  const MongoClient = require('mongodb').MongoClient;
+  const uri = 'mongodb://127.0.0.1:27017/';
+
+  MongoClient.connect(uri, function (err, client) {
+    if (err) {
+      return console.log('Error connecting to the database: ' + err);
+    }
+    const db = client.db('occassionDB');
+    const collection = db.collection('events');
+    collection.updateOne({ _id: ObjectId(req.body.elemid) },
+      { $pull: { 
+        seatingPlan: { 
+          roomNumber: req.body.roomNumber, 
+          tableNumber: req.body.tableNumber, 
+          seatedBy: ObjectId(req.body.seatedBy), 
+          seatNumber: req.body.seatNumber 
+          } 
+        } 
+      }
+    );
+  });
+  res.redirect('/delevent');
 });
 
 // create rooms with tables
