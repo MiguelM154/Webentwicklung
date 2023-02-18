@@ -166,7 +166,7 @@ const SeatSchema = new mongoose.Schema({
   },
   typeoftableseat: {
     type: String,
-    enum: ['einseitig', 'zweiseitig'],
+    enum: ['einseitig', 'zweiseitig', 'undefined'],
     required: true
   }
 });
@@ -417,28 +417,30 @@ app.post('/new-placement', (req, res) => {
     }
     const db = client.db('occassionDB');
     const collection = db.collection('events');
-    collection.updateOne({ _id: ObjectId(req.body.guestevent) },
+      collection.updateOne({ _id: ObjectId(req.body.guestevent) },
       { $push: { 
         seatingPlan: { 
           roomNumber: req.body.rooms, 
           tableNumber: req.body.seatTable, 
           seatedBy: ObjectId(req.body.gie), 
-          seatNumber: req.body.seatSeat 
+          seatNumber: req.body.seatSeat,
+          typeoftableseat: 'undefined'
           } 
         } 
       }
     );
   });
-  Event.findOne({ _id: ObjectId(req.body.guestevent) }, (error, event) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(event);
-      event.update({ $addToSet: { roomNumber: 5 } });
+  /*Event.updateOne({ _id: ObjectId(req.body.guestevent) },
+    { $push: { 
+      seatingPlan: { 
+          roomNumber: req.body.rooms,
+          tableNumber: req.body.seatTable,
+          seatedBy: ObjectId(req.body.gie),
+          seatNumber: req.body.seatSeat,
+          typeoftableseat: req.body.seatorder 
+        } 
+      } 
     }
-  });
-  Event.updateOne({ _id: ObjectId(req.body.guestevent) },
-    { $push: { seatingPlan: { roomNumber: req.body.rooms, tableNumber: req.body.seatTable, seatedBy: ObjectId(req.body.gie), seatNumber: req.body.seatSeat } } }
   );
   /* Event.findOne({ _id: Object(req.body.guestevent) }, { seatingPlan: { roomNumber: req.body.rooms, tableNumber: req.body.seatTable, seatedBy: req.body.gie, seatNumber: req.body.seatSeat } }, (error, event) => {
     if (error) {
@@ -518,6 +520,36 @@ app.post('/delete-reserv', function (req, res) {
     );
   });
   res.redirect('/delevent');
+});
+
+// update Tischordnung
+
+app.post('/update-placement', (req, res) => {
+  const ObjectId = require('mongodb').ObjectId;
+  const MongoClient = require('mongodb').MongoClient;
+  const uri = 'mongodb://127.0.0.1:27017/';
+
+  MongoClient.connect(uri, async function (err, client) {
+    if (err) {
+      return console.log('Error connecting to the database: ' + err);
+    }
+    const db = client.db('occassionDB');
+    const collection = db.collection('events');
+/*, 
+      {seatingPlan: { 
+        roomNumber: req.body.roomNumber, 
+        tableNumber: req.body.tableNumber, 
+        }
+    } */
+    const query = { _id: ObjectId(req.body.elemid), "seatingPlan.roomNumber": req.body.roomNumber, "seatingPlan.tableNumber": req.body.tableNumber };
+    const setter = ({ 
+      $set: { 
+        "seatingPlan.$[].typeoftableseat": req.body.seatorder
+      } 
+    });
+      await collection.updateOne(query, setter);
+  }); 
+  res.redirect('/event');
 });
 
 // create rooms with tables

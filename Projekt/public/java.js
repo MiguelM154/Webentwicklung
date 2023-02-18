@@ -195,6 +195,40 @@ function getDataTablesForDelete () {
 }
 getDataTablesForDelete();
 
+function getDataErweiterung () {
+  fetch('/api/dataEvent')
+    .then((res) => res.json())
+    .then(async (res) => {
+      const stringifiedObject = JSON.stringify(res);
+      const objects = JSON.parse(stringifiedObject);
+      const table = document.getElementById('data-eventErw');
+      const arrayOfGaeste = [];
+      for (const getguest of objects.filteredGuests) {
+        arrayOfGaeste[getguest._id] = getguest.name;
+      }
+      for (const element of objects.filteredEvents) {
+        for (const key of element.seatingPlan) {
+          const row = table.insertRow();
+          const cell1 = row.insertCell(0);
+          const cell2 = row.insertCell(1);
+          const cell3 = row.insertCell(2);
+          const cell4 = row.insertCell(3);
+          const cell5 = row.insertCell(4);
+          const cell6 = row.insertCell(5);
+          cell1.innerHTML = element.name;
+          cell2.innerHTML = arrayOfGaeste[key.seatedBy];
+          cell3.innerHTML = key.roomNumber;
+          cell4.innerHTML = key.tableNumber;
+          cell5.innerHTML = key.typeoftableseat;
+          cell6.innerHTML = '<form action="/update-placement" method="post"><input type="hidden" id="object" name="object" value="' + key + '"><input type="hidden" id="roomNumber" name="roomNumber" value="' + key.roomNumber + '"><input type="hidden" id="tableNumber" name="tableNumber" value="' + key.tableNumber + '"><input type="hidden" id="elemid" name="elemid" value="' + element._id + '"><input type="hidden" id="seatedBy" name="seatedBy" value="' + key.seatedBy + '"><input type="hidden" id="seatNumber" name="seatNumber" value="' + key.seatNumber + '"><select name="seatorder" id="seatorder"><option value="einseitig">Einseitig</option><option value="zweiseitig">Zweiseitig</option></select><input type="submit" value="Tischbestuhlung aendern"></form>'; 
+          
+        }
+      }
+    }
+  );
+}
+getDataErweiterung();
+
 function getEventOptions () {
   fetch('/api/dataEvent')
     .then((res) => res.json())
@@ -203,7 +237,7 @@ function getEventOptions () {
       const objects = JSON.parse(stringifiedObject);
       if (objects.filteredGuests.length !== 0) {
         for (const element of objects.filteredGuests) {
-          if (element.status == 'eingeladen' || element.status == 'zugesagt') {
+          if (element.status === 'eingeladen' || element.status === 'zugesagt') {
             const selectGuestOptions = document.getElementById('gie');
             const opt = document.createElement('option');
             opt.value = element._id;
@@ -301,6 +335,19 @@ function getEventOptions () {
             selectSeatOptions.appendChild(optSeat);
           }
         }
+
+       /* //new added for tableorder (start)
+        const selectTableSeatorderOptions = document.getElementById('seatorder');
+        const optTable = document.createElement('option');
+        const optTable2 = document.createElement('option');
+        optTable.value = 'einseitig';
+        optTable.innerHTML = 'Einseitig';
+        optTable2.value = 'zweiseitig';
+        optTable2.innerHTML = 'Zweiseitig';
+        selectTableSeatorderOptions.appendChild(optTable);
+        selectTableSeatorderOptions.appendChild(optTable2);
+        //new added tableorder (end)*/
+
       }
     }
     );

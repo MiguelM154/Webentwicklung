@@ -50,7 +50,7 @@
     <br></br>
 
     <table id="data-guest" onload="getDataGuest()" aria-label="Gasttabelle">
-            <th>Gaeste</th>
+        <th>Gaeste</th>
         <tr>
           <th>Gast Name</th>
           <th>Minderjaehrig</th>
@@ -63,13 +63,27 @@
     <table id="data-table" onload="getDataTables()" aria-label="TischordnungTabelle">
         <th>Tischordnung</th>
         <tr>
-            <th>Event</th>
+          <th>Event</th>
           <th>Gast Name</th>
           <th>Tisch</th>
           <th>Sitzplatz</th>
         </tr>
       </table>
 
+      <br></br>
+
+      <table id="data-eventErw" onload="getDataErweiterung()" aria-label="EventTabelleErweiterung">
+        <th>Events</th>
+        <tr>
+          <th>Name</th>
+          <th>Gast Name</th>
+          <th>Raum</th>
+          <th>Tisch</th>
+          <th>Tischbestuhlung</th>
+          <th>Tischbestuhlung aendern</th>
+        </tr>
+      </table>
+  
       <br></br>
 
       <div class="container">
@@ -142,6 +156,12 @@
 
           </select>
 
+          <!--<label for="seatorder">Tisch Bestuhlung</label>
+          <select id="seatorder" name="seatorder">
+            <option value="einseitig">Einseitig</option>
+            <option value="zweiseitig">Zweiseitig</option>
+          </select>-->
+
           <label for="seatSeat">Sitzplatz</label>
           <select id="seatSeat" name="seatSeat">
                 
@@ -151,6 +171,7 @@
       
         </form>
       </div>
+
     <!--    Content Ende    -->
 
     <footer>
