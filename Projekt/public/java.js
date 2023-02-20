@@ -630,14 +630,15 @@ window.onload = function () {
             }
           }
         }
-        const selectTableOptions = document.getElementById('seatTable');
+        /* const selectTableOptions = document.getElementById('seatTable');
         selectTableOptions.options.length = 0;
         for (let i = 0; i < roomnum.tables.length; i++) {
+          console.log('test');
           const optTable = document.createElement('option');
           optTable.value = roomnum.tables[i].number;
           optTable.innerHTML = i + 1;
           selectTableOptions.appendChild(optTable);
-        }
+        } */
         const form = document.getElementById('event-form');
         console.log(form.elements);
         let firstevent;
