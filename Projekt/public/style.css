@@ -155,7 +155,7 @@ nav ul li ul li a:hover {
 .events
 {
 	text-align: center;
-	max-width: 450px;
+	max-width: 525px;
 	margin: 0rem auto;
 }
 
@@ -405,4 +405,7 @@ span.psw {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
+  }
+  .tableProportions {
+    max-width: fit-content;
   }

@@ -129,12 +129,6 @@ async function sendData (data) {
   return result;
 } */
 
-/* function "getDataTables()" needs check if seats avaible then countdown seats until no more remaining */
-
-/*function checkIfSeatAvaible(seatsavaible) {
-  
-}*/
-
 function getDataTables () {
   fetch('/api/dataEvent')
     .then((res) => res.json())
@@ -153,10 +147,14 @@ function getDataTables () {
           const cell2 = row.insertCell(1);
           const cell3 = row.insertCell(2);
           const cell4 = row.insertCell(3);
+          const cell5 = row.insertCell(4);
+          const cell6 = row.insertCell(5);
           cell1.innerHTML = element.name;
           cell2.innerHTML = arrayOfGaeste[key.seatedBy];
           cell3.innerHTML = key.tableNumber;
-          cell4.innerHTML = key.seatNumber; 
+          cell4.innerHTML = key.typeoftableseat;
+          cell5.innerHTML = key.tableform;
+          cell6.innerHTML = key.seatNumber;
         }
       }
     }
@@ -183,11 +181,15 @@ function getDataTablesForDelete () {
           const cell3 = row.insertCell(2);
           const cell4 = row.insertCell(3);
           const cell5 = row.insertCell(4);
+          const cell6 = row.insertCell(5);
+          const cell7 = row.insertCell(6);
           cell1.innerHTML = element.name;
           cell2.innerHTML = arrayOfGaeste[key.seatedBy];
           cell3.innerHTML = key.tableNumber;
-          cell4.innerHTML = key.seatNumber;
-          cell5.innerHTML = '<form action="/delete-reserv" method="post"><input type="hidden" id="object" name="object" value="' + key + '"><input type="hidden" id="roomNumber" name="roomNumber" value="' + key.roomNumber + '"><input type="hidden" id="tableNumber" name="tableNumber" value="' + key.tableNumber + '"><input type="hidden" id="elemid" name="elemid" value="' + element._id + '"><input type="hidden" id="seatedBy" name="seatedBy" value="' + key.seatedBy + '"><input type="hidden" id="seatNumber" name="seatNumber" value="' + key.seatNumber + '"><input type="submit" value="Reservierung zuruecknehmen"></form>'; 
+          cell4.innerHTML = key.typeoftableseat;
+          cell5.innerHTML = key.tableform;
+          cell6.innerHTML = key.seatNumber;
+          cell7.innerHTML = '<form action="/delete-reserv" method="post"><input type="hidden" id="object" name="object" value="' + key + '"><input type="hidden" id="roomNumber" name="roomNumber" value="' + key.roomNumber + '"><input type="hidden" id="tableNumber" name="tableNumber" value="' + key.tableNumber + '"><input type="hidden" id="elemid" name="elemid" value="' + element._id + '"><input type="hidden" id="seatedBy" name="seatedBy" value="' + key.seatedBy + '"><input type="hidden" id="seatNumber" name="seatNumber" value="' + key.seatNumber + '"><input type="submit" value="Cancel"></form>';
         }
       }
     }
@@ -219,9 +221,8 @@ function getDataErweiterung () {
           cell2.innerHTML = arrayOfGaeste[key.seatedBy];
           cell3.innerHTML = key.roomNumber;
           cell4.innerHTML = key.tableNumber;
-          cell5.innerHTML = key.typeoftableseat;
-          cell6.innerHTML = '<form action="/update-placement" method="post"><input type="hidden" id="object" name="object" value="' + key + '"><input type="hidden" id="roomNumber" name="roomNumber" value="' + key.roomNumber + '"><input type="hidden" id="tableNumber" name="tableNumber" value="' + key.tableNumber + '"><input type="hidden" id="elemid" name="elemid" value="' + element._id + '"><input type="hidden" id="seatedBy" name="seatedBy" value="' + key.seatedBy + '"><input type="hidden" id="seatNumber" name="seatNumber" value="' + key.seatNumber + '"><select name="seatorder" id="seatorder"><option value="einseitig">Einseitig</option><option value="zweiseitig">Zweiseitig</option></select><input type="submit" value="Tischbestuhlung aendern"></form>'; 
-          
+          cell5.innerHTML = '<form action="/update-placement" method="post"><input type="hidden" id="object" name="object" value="' + key + '"><input type="hidden" id="roomNumber" name="roomNumber" value="' + key.roomNumber + '"><input type="hidden" id="tableNumber" name="tableNumber" value="' + key.tableNumber + '"><input type="hidden" id="elemid" name="elemid" value="' + element._id + '"><input type="hidden" id="seatedBy" name="seatedBy" value="' + key.seatedBy + '"><input type="hidden" id="seatNumber" name="seatNumber" value="' + key.seatNumber + '"><select name="seatorder" id="seatorder"><option value="einseitig">Einseitig</option><option value="zweiseitig">Zweiseitig</option></select><input type="submit" value="aendern"></form>';
+          cell6.innerHTML = '<form action="/update-tableform" method="post"><input type="hidden" id="object" name="object" value="' + key + '"><input type="hidden" id="roomNumber" name="roomNumber" value="' + key.roomNumber + '"><input type="hidden" id="tableNumber" name="tableNumber" value="' + key.tableNumber + '"><input type="hidden" id="elemid" name="elemid" value="' + element._id + '"><input type="hidden" id="seatedBy" name="seatedBy" value="' + key.seatedBy + '"><input type="hidden" id="seatNumber" name="seatNumber" value="' + key.seatNumber + '"><select id="tableform" name="tableform"><option value="rechteckiger Tisch">rechteckig</option><option value="kreis Tisch">kreis</option><option value="quadratischer Tisch">quadratisch</option></select><input type="submit" value="aendern"></form>';
         }
       }
     }
@@ -335,19 +336,6 @@ function getEventOptions () {
             selectSeatOptions.appendChild(optSeat);
           }
         }
-
-       /* //new added for tableorder (start)
-        const selectTableSeatorderOptions = document.getElementById('seatorder');
-        const optTable = document.createElement('option');
-        const optTable2 = document.createElement('option');
-        optTable.value = 'einseitig';
-        optTable.innerHTML = 'Einseitig';
-        optTable2.value = 'zweiseitig';
-        optTable2.innerHTML = 'Zweiseitig';
-        selectTableSeatorderOptions.appendChild(optTable);
-        selectTableSeatorderOptions.appendChild(optTable2);
-        //new added tableorder (end)*/
-
       }
     }
     );

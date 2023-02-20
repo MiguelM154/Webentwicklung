@@ -3,7 +3,6 @@ const app = express();
 const path = require('path');
 const port = process.argv;
 const mongoose = require('mongoose');
-// const ObjectId = require('mongodb').ObjectId;
 const bodyParser = require('body-parser');
 
 const session = require('express-session');
@@ -105,7 +104,12 @@ const tableSchema = {
   },
   typeoftableseat: {
     type: String,
-    enum: ['einseitig', 'zweiseitig'],
+    enum: ['einseitig', 'zweiseitig', 'undefined'],
+    required: true
+  },
+  tableform: {
+    type: String,
+    enum: ['rechteckiger Tisch', 'kreis Tisch', 'quadratischer Tisch', 'undefined'],
     required: true
   }
 };
@@ -167,6 +171,11 @@ const SeatSchema = new mongoose.Schema({
   typeoftableseat: {
     type: String,
     enum: ['einseitig', 'zweiseitig', 'undefined'],
+    required: true
+  },
+  tableform: {
+    type: String,
+    enum: ['rechteckiger Tisch', 'kreis Tisch', 'quadratischer Tisch', 'undefined'],
     required: true
   }
 });
@@ -424,32 +433,13 @@ app.post('/new-placement', (req, res) => {
           tableNumber: req.body.seatTable, 
           seatedBy: ObjectId(req.body.gie), 
           seatNumber: req.body.seatSeat,
-          typeoftableseat: 'undefined'
+          typeoftableseat: 'undefined',
+          tableform: 'undefined'
           } 
         } 
       }
     );
   });
-  /*Event.updateOne({ _id: ObjectId(req.body.guestevent) },
-    { $push: { 
-      seatingPlan: { 
-          roomNumber: req.body.rooms,
-          tableNumber: req.body.seatTable,
-          seatedBy: ObjectId(req.body.gie),
-          seatNumber: req.body.seatSeat,
-          typeoftableseat: req.body.seatorder 
-        } 
-      } 
-    }
-  );
-  /* Event.findOne({ _id: Object(req.body.guestevent) }, { seatingPlan: { roomNumber: req.body.rooms, tableNumber: req.body.seatTable, seatedBy: req.body.gie, seatNumber: req.body.seatSeat } }, (error, event) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(event);
-      res.redirect('/event');
-    }
-  }); */
   res.redirect('/event');
 });
 
@@ -535,12 +525,6 @@ app.post('/update-placement', (req, res) => {
     }
     const db = client.db('occassionDB');
     const collection = db.collection('events');
-/*, 
-      {seatingPlan: { 
-        roomNumber: req.body.roomNumber, 
-        tableNumber: req.body.tableNumber, 
-        }
-    } */
     const query = { _id: ObjectId(req.body.elemid), "seatingPlan.roomNumber": req.body.roomNumber, "seatingPlan.tableNumber": req.body.tableNumber };
     const setter = ({ 
       $set: { 
@@ -549,7 +533,31 @@ app.post('/update-placement', (req, res) => {
     });
       await collection.updateOne(query, setter);
   }); 
-  res.redirect('/event');
+  res.redirect('/delevent');
+});
+
+// update Tisch Form
+
+app.post('/update-tableform', (req, res) => {
+  const ObjectId = require('mongodb').ObjectId;
+  const MongoClient = require('mongodb').MongoClient;
+  const uri = 'mongodb://127.0.0.1:27017/';
+
+  MongoClient.connect(uri, async function (err, client) {
+    if (err) {
+      return console.log('Error connecting to the database: ' + err);
+    }
+    const db = client.db('occassionDB');
+    const collection = db.collection('events');
+    const query = { _id: ObjectId(req.body.elemid), "seatingPlan.roomNumber": req.body.roomNumber, "seatingPlan.tableNumber": req.body.tableNumber };
+    const setter = ({ 
+      $set: { 
+        "seatingPlan.$[].tableform": req.body.tableform
+      } 
+    });
+      await collection.updateOne(query, setter);
+  }); 
+  res.redirect('/delevent');
 });
 
 // create rooms with tables
@@ -565,19 +573,23 @@ const room1 = new Room({
       number: 1,
       availability: true,
       seatsAvailable: 4,
-      typeoftableseat: 'einseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'rechteckiger Tisch'
     },
     {
       number: 2,
       availability: true,
       seatsAvailable: 4,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
+
     },
     {
       number: 3,
       availability: true,
       seatsAvailable: 2,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     }
   ]
 });
@@ -593,25 +605,29 @@ const room2 = new Room({
       number: 5,
       availability: true,
       seatsAvailable: 4,
-      typeoftableseat: 'einseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'rechteckiger Tisch'
     },
     {
       number: 6,
       availability: true,
       seatsAvailable: 4,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     },
     {
       number: 7,
       availability: true,
       seatsAvailable: 2,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     },
     {
       number: 8,
       availability: true,
       seatsAvailable: 2,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     }
   ]
 });
@@ -627,25 +643,29 @@ const room3 = new Room({
       number: 9,
       availability: true,
       seatsAvailable: 3,
-      typeoftableseat: 'einseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'rechteckiger Tisch'
     },
     {
       number: 10,
       availability: true,
       seatsAvailable: 4,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     },
     {
       number: 11,
       availability: true,
       seatsAvailable: 2,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     },
     {
       number: 12,
       availability: true,
       seatsAvailable: 2,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     }
   ]
 });
@@ -661,25 +681,29 @@ const room4 = new Room({
       number: 13,
       availability: true,
       seatsAvailable: 4,
-      typeoftableseat: 'einseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'rechteckiger Tisch'
     },
     {
       number: 14,
       availability: true,
       seatsAvailable: 4,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     },
     {
       number: 15,
       availability: true,
       seatsAvailable: 2,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     },
     {
       number: 16,
       availability: true,
       seatsAvailable: 2,
-      typeoftableseat: 'zweiseitig'
+      typeoftableseat: 'undefined',
+      tableform: 'kreis Tisch'
     }
   ]
 });
@@ -749,16 +773,3 @@ Room.findOne({ number: room4.number }, (error, exists) => {
     });
   }
 });
-
-// test ground for after
-
-/* 
-const objectId = new ObjectId('63dd81e8ee30441365a8a48c');
-Event.findOne({ objectId }, (err, doc) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(doc);
-  }
-}); 
-*/

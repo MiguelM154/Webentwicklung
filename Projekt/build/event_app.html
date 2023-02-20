@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" media="screen">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300&display=swap" rel="stylesheet">
     <script src="java.js" type="application/javascript"></script>
 </head>
 
@@ -20,7 +19,7 @@
             <li class="navitem"><a href="#">Event</a>
                 <ul>
                     <li class="dropdown"><a href="event">Event planen</a></li>
-                    <li class="dropdown"><a href="delevent">Event löschen</a></li>
+                    <li class="dropdown"><a href="delevent">Datan bearbeiten</a></li>
                 </ul>
             </li>
 
@@ -34,168 +33,150 @@
 
         </nav>
     </header>
+    <main>
+      <!--    Content Anfang   -->
+      <section class="hero" id="backgroundImage">
+        <h1 class="specialHeader1">eventic</h1>
+      </section>
+      <br />
+      <section class="intro">
+          <h2 class="section-title_intro">Event planen</h2>
+          <br />
+          <h3>Hier können sie ihr Event planen.</h3>
+      </section>
+      <br />
+      <section class="sectionsBelow">
+        <header class="events">
+          <h3 class="section-title_beratung small-title">Events Informationen</h3>
+          <table class="tableProportions" id="data-event" onload="getData()" aria-label="EventTabelle">
+            <tr>
+                <th>Name</th>
+                <th>Datum</th>
+                <th>Zeit</th>
+                <th>Raum</th>
+            </tr>
+          </table>
+        </header>
+        <header class="events">
+          <h3 class="section-title_beratung small-title">Gaeste Informationen</h3>
+          <table class="tableProportions" id="data-guest" onload="getDataGuest()" aria-label="Gasttabelle">
+              <tr>
+                <th>Gast Name</th>
+                <th>Minderjaehrig</th>
+                <th>Status</th>
+              </tr>
+            </table>
+        </header>
+        <br><br>
+        <header class="events">
+          <h3 class="section-title_beratung small-title">Reservierungen Informationen</h3>
+          <table class="tableProportions" id="data-table" onload="getDataTables()" aria-label="TischordnungTabelle">
+              <tr>
+                <th>Event</th>
+                <th>Gast Name</th>
+                <th>Tisch</th>
+                <th>Bestuhlung</th>
+                <th>Tisch From</th>
+                <th>Sitzplatz</th>
+              </tr>
+            </table>
+          </header>
+        </section>
+        <br></br>
 
-    <!--    Content Anfang   -->
-
-    <table id="data-event" onload="getData()" aria-label="EventTabelle">
-        <th>Events</th>
-    <tr>
-        <th>Name</th>
-        <th>Datum</th>
-        <th>Zeit</th>
-        <th>Raum</th>
-    </tr>
-    </table>
-
-    <br></br>
-
-    <table id="data-guest" onload="getDataGuest()" aria-label="Gasttabelle">
-        <th>Gaeste</th>
-        <tr>
-          <th>Gast Name</th>
-          <th>Minderjaehrig</th>
-          <th>Status</th>
-        </tr>
-      </table>
-
-      <br></br>
-
-    <table id="data-table" onload="getDataTables()" aria-label="TischordnungTabelle">
-        <th>Tischordnung</th>
-        <tr>
-          <th>Event</th>
-          <th>Gast Name</th>
-          <th>Tisch</th>
-          <th>Sitzplatz</th>
-        </tr>
-      </table>
-
-      <br></br>
-
-      <table id="data-eventErw" onload="getDataErweiterung()" aria-label="EventTabelleErweiterung">
-        <th>Events</th>
-        <tr>
-          <th>Name</th>
-          <th>Gast Name</th>
-          <th>Raum</th>
-          <th>Tisch</th>
-          <th>Tischbestuhlung</th>
-          <th>Tischbestuhlung aendern</th>
-        </tr>
-      </table>
-  
-      <br></br>
-
-      <div class="container">
-        <form action="/new-guest" method="post">
-      
-          <label for="name">Gast Name</label>
-          <input type="text" id="name" name="name" placeholder="Name..">
-      
-          <label for="isChild">Ist der Gast minderjaehrig ?</label>
-          <select id="isChild" name="isChild">
-            <option value="Ja">Ja</option>
-            <option value="Nein">Nein</option>
-          </select>
-
-          <label for="gstatus">Status</label>
-            <select id="gstatus" name="gstatus">
-            <option value="eingeladen">Eingeladen</option>
-            <option value="abgesagt">Abgesagt</option>
-            <option value="zugesagt">Zugesagt</option>
-            <option value="unbekannt">unbekannt</option>
+        <div class="container">
+          <form action="/new-guest" method="post">
+        
+            <label for="name">Gast Name</label>
+            <input type="text" id="name" name="name" placeholder="Name..">
+        
+            <label for="isChild">Ist der Gast minderjaehrig ?</label>
+            <select id="isChild" name="isChild">
+              <option value="Ja">Ja</option>
+              <option value="Nein">Nein</option>
             </select>
-      
-          <input type="submit" value="Submit">
-      
-        </form>
-      </div>
 
-      <br></br>
+            <label for="gstatus">Status</label>
+              <select id="gstatus" name="gstatus">
+              <option value="eingeladen">Eingeladen</option>
+              <option value="abgesagt">Abgesagt</option>
+              <option value="zugesagt">Zugesagt</option>
+              <option value="unbekannt">unbekannt</option>
+              </select>
+        
+            <input type="submit" value="Submit">
+        
+          </form>
+        </div>
 
-      <div class="container">
-        <form action="/new-event" method="post">
-      
-          <label for="ename">Event Name</label>
-          <input type="text" id="ename" name="ename" placeholder="Name..">
+        <br></br>
 
-          <label for="date">Datum</label>
-          <input type="datetime-local" id="edate" name="edate">
+        <div class="container">
+          <form action="/new-event" method="post">
+        
+            <label for="ename">Event Name</label>
+            <input type="text" id="ename" name="ename" placeholder="Name..">
 
-          <br></br>
-          
-          <div id="contain">
+            <label for="date">Datum</label>
+            <input type="datetime-local" id="edate" name="edate">
 
-          </div>
-      
-        </form>
-      </div>
-
-      <br></br>
-
-      <div class="container">
-        <form action="/new-placement" method="post" id="event-form" onload="getEventOptions()">
-      
-          <label for="gie">Bitte waehlen sie den Gast fuer dieses Event aus</label>
-          <select id="gie" name="gie">
+            <br></br>
             
-          </select>
+            <div id="contain">
 
-          <label for="guestevent">Event</label>
-          <select id="guestevent" name="guestevent">
+            </div>
+        
+          </form>
+        </div>
 
-          </select>
+        <br></br>
 
-          <label for="rooms">Raeume</label>
-          <select id="rooms" name="rooms">
+        <div class="container">
+          <form action="/new-placement" method="post" id="event-form" onload="getEventOptions()">
+        
+            <label for="gie">Bitte waehlen sie den Gast fuer dieses Event aus</label>
+            <select id="gie" name="gie">
+              
+            </select>
 
-          </select>
+            <label for="guestevent">Event</label>
+            <select id="guestevent" name="guestevent">
 
-          <label for="seatTable">Tisch</label>
-          <select id="seatTable" name="seatTable">
+            </select>
 
-          </select>
+            <label for="rooms">Raeume</label>
+            <select id="rooms" name="rooms">
 
-          <!--<label for="seatorder">Tisch Bestuhlung</label>
-          <select id="seatorder" name="seatorder">
-            <option value="einseitig">Einseitig</option>
-            <option value="zweiseitig">Zweiseitig</option>
-          </select>-->
+            </select>
 
-          <label for="seatSeat">Sitzplatz</label>
-          <select id="seatSeat" name="seatSeat">
-                
-          </select>
-      
-          <input type="submit" value="Submit">
-      
-        </form>
-      </div>
+            <label for="seatTable">Tisch</label>
+            <select id="seatTable" name="seatTable">
 
-    <!--    Content Ende    -->
+            </select>
 
+            <label for="seatSeat">Sitzplatz</label>
+            <select id="seatSeat" name="seatSeat">
+                  
+            </select>
+        
+            <input type="submit" value="Submit">
+        
+          </form>
+        </div>
+
+      <!--    Content Ende    -->
+    </main>
     <footer>
         <div class="foot">
             <ul class="footer-nav">
 
                 <li><a href="/">Home</a></li>
-                <li><a href="delevent">Event löschen</a></li>
+                <li><a href="delevent">Datan bearbeiten</a></li>
                 <li><a href="login">Login</a></li>
                 <li><a href="register">Registrierung</a></li>
 
             </ul>
             <br />
-              <ul class="footer-social">
-                <li>
-                  <a href="#"><img src="https://github.com/MiguelM154/Webentwicklung/blob/main/images/facebook_icon.png?raw=true" alt="Facebook" class="image"></a>
-                </li>
-                <li>
-                  <a href="#"><img src="https://github.com/MiguelM154/Webentwicklung/blob/main/images/twitter_icon.png?raw=true" alt="Twitter" class="image"></a>
-                </li>
-                <li>
-                  <a href="#"><img src="https://github.com/MiguelM154/Webentwicklung/blob/main/images/instagram_icon.png?raw=true" alt="instagram" class="image"></a>
-                </li>
-            </ul>
         </div>
     </footer>
 </body>

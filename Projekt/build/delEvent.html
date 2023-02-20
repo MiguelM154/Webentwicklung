@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" media="screen">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300&display=swap" rel="stylesheet">
     <script src="java.js" type="application/javascript"></script>
 </head>
 
@@ -20,7 +19,7 @@
                 <li class="navitem"><a href="#">Event</a>
                     <ul>
                         <li class="dropdown"><a href="event">Event planen</a></li>
-                        <li class="dropdown"><a href="delevent">Event löschen</a></li>
+                        <li class="dropdown"><a href="delevent">Datan bearbeiten</a></li>
                     </ul>
                 </li>
 
@@ -36,41 +35,76 @@
 
     <!--    Content Anfang          -->
 
-    <table id="del-data-event" onload="getDataForDelete()" aria-label="tableDataEvent">
-        <th>Events</th>
-    <tr>
-        <th>Name</th>
-        <th>Datum</th>
-        <th>Zeit</th>
-        <th>Raum</th>
-        <th>Löschen</th>
-    </tr>
-    </table>
-    <br><br>
-    <table id="del-data-guest" onload="getDataGuestForDelete()" aria-label="tableDataGast">
-        <th>Guests</th>
-    <tr>
-      <th>Guest Name</th>
-      <th>Child</th>
-      <th>Status</th>
-      <th>Entfernen</th>
-    </tr>
-  </table>
-
-  <br><br>
-
-  <table id="del-data-table" onload="getDataTablesForDelete()" aria-label="TischordnungTabelle">
-    <th>Tischordnung</th>
-    <tr>
-        <th>Event</th>
-        <th>Gast Name</th>
-        <th>Tisch</th>
-        <th>Sitzplatz</th>
-        <th>Zuruecknehmen</th>
-    </tr>
-  </table>
-  <br><br>
-
+    <main>
+        <section class="hero" id="backgroundImage">
+            <h1 class="specialHeader1">eventic</h1>
+        </section>
+        <br />
+        <section class="intro">
+            <h2 class="section-title_intro">Datan bearbeiten</h2>
+            <br />
+            <h3>Hier können sie ihre Daten bearbeiten.</h3>
+        </section>
+        <br />
+        <section class="sectionsBelow">
+            <header class="events">
+                <h3 class="section-title_beratung small-title">Events entfernen</h3>
+                <table class="tableProportions" id="del-data-event" onload="getDataForDelete()" aria-label="tableDataEvent">
+                    <tr>
+                        <th>Name</th>
+                        <th>Datum</th>
+                        <th>Zeit</th>
+                        <th>Raum</th>
+                        <th>Löschen</th>
+                    </tr>
+                </table>
+            </header>
+            <header class="events">
+                <h3 class="section-title_beratung small-title">Gast entfernen</h3>
+                <table class="tableProportions" id="del-data-guest" onload="getDataGuestForDelete()" aria-label="tableDataGast">
+                    <tr>
+                        <th>Guest Name</th>
+                        <th>Child</th>
+                        <th>Status</th>
+                        <th>Entfernen</th>
+                    </tr>
+                </table>
+            </header>
+        </section>
+        <br><br>
+        <section class="sectionsBelow">
+            <header class="events">
+                <h3 class="section-title_beratung small-title">Reservierung entfernen</h3>
+                <table class="tableProportions" id="del-data-table" onload="getDataTablesForDelete()" aria-label="ReservierungenTabelle">
+                    <tr>
+                        <th>Event</th>
+                        <th>Gast Name</th>
+                        <th>Tisch</th>
+                        <th>Bestuhlung</th>
+                        <th>Tisch Form</th>
+                        <th>Sitzplatz</th>
+                        <th>Canceln</th>
+                    </tr>
+                </table>
+                <br><br>
+            </header>
+            <br><br>
+            <header class="events">
+                <h3 class="section-title_beratung small-title">Reservierung bearbeiten</h3>
+                <table class="tableProportions" id="data-eventErw" onload="getDataErweiterung()" aria-label="EventTabelleErweiterung">
+                    <tr>
+                        <th>Name</th>
+                        <th>Gast Name</th>
+                        <th>Raum</th>
+                        <th>Tisch</th>
+                        <th>Bestuhlung</th>
+                        <th>Tisch Form</th>
+                    </tr>
+                </table>
+            </header>
+          </section>
+          <br><br>
+    </main>
     <!--    Content Ende    -->
 
     <footer>
@@ -84,17 +118,6 @@
 
             </ul>
             <br />
-            <ul class="footer-social">
-                <li>
-                    <a href="#"><img src="https://github.com/MiguelM154/Webentwicklung/blob/main/images/facebook_icon.png?raw=true" alt="Facebook" class="image"></a>
-                </li>
-                <li>
-                    <a href="#"><img src="https://github.com/MiguelM154/Webentwicklung/blob/main/images/twitter_icon.png?raw=true" alt="Twitter" class="image"></a>
-                </li>
-                <li>
-                    <a href="#"><img src="https://github.com/MiguelM154/Webentwicklung/blob/main/images/instagram_icon.png?raw=true" alt="instagram" class="image"></a>
-                </li>
-            </ul>
         </div>
     </footer>
 </body>
