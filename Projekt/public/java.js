@@ -28,8 +28,10 @@ function getData () {
         cell3.innerHTML = getTimeStr(Datestr);
         cell4.innerHTML = element.roomNumber;
       }
-    }
-    );
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 getData();
 
@@ -54,8 +56,10 @@ function getDataForDelete () {
         cell4.innerHTML = element.roomNumber;
         cell5.innerHTML = '<form action="/delete-event" method="post"><input type="hidden" id="eventId" name="eventId" value="' + element._id + '"><input type="submit" value="Event Löschen"></form>';
       }
-    }
-    );
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 getDataForDelete();
 
@@ -75,8 +79,10 @@ function getDataGuest () {
         cell2.innerHTML = element.child;
         cell3.innerHTML = element.status;
       }
-    }
-    );
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 getDataGuest();
 
@@ -98,8 +104,10 @@ function getDataGuestForDelete () {
         cell3.innerHTML = element.status;
         cell4.innerHTML = '<form action="/delete-gast" method="post"><input type="hidden" id="gastid" name="gastid" value="' + element._id + '"><input type="submit" value="Gast entfernen"></form>';
       }
-    }
-    );
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 getDataGuestForDelete();
 
@@ -157,8 +165,10 @@ function getDataTables () {
           cell6.innerHTML = key.seatNumber;
         }
       }
-    }
-    );
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 getDataTables();
 
@@ -192,8 +202,10 @@ function getDataTablesForDelete () {
           cell7.innerHTML = '<form action="/delete-reserv" method="post"><input type="hidden" id="object" name="object" value="' + key + '"><input type="hidden" id="roomNumber" name="roomNumber" value="' + key.roomNumber + '"><input type="hidden" id="tableNumber" name="tableNumber" value="' + key.tableNumber + '"><input type="hidden" id="elemid" name="elemid" value="' + element._id + '"><input type="hidden" id="seatedBy" name="seatedBy" value="' + key.seatedBy + '"><input type="hidden" id="seatNumber" name="seatNumber" value="' + key.seatNumber + '"><input type="submit" value="Cancel"></form>';
         }
       }
-    }
-    );
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 getDataTablesForDelete();
 
@@ -225,8 +237,10 @@ function getDataErweiterung () {
           cell6.innerHTML = '<form action="/update-tableform" method="post"><input type="hidden" id="object" name="object" value="' + key + '"><input type="hidden" id="roomNumber" name="roomNumber" value="' + key.roomNumber + '"><input type="hidden" id="tableNumber" name="tableNumber" value="' + key.tableNumber + '"><input type="hidden" id="elemid" name="elemid" value="' + element._id + '"><input type="hidden" id="seatedBy" name="seatedBy" value="' + key.seatedBy + '"><input type="hidden" id="seatNumber" name="seatNumber" value="' + key.seatNumber + '"><select id="tableform" name="tableform"><option value="rechteckiger Tisch">rechteckig</option><option value="kreis Tisch">kreis</option><option value="quadratischer Tisch">quadratisch</option></select><input type="submit" value="aendern"></form>';
         }
       }
-    }
-    );
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 getDataErweiterung();
 
@@ -243,7 +257,9 @@ function getEventOptions () {
             const opt = document.createElement('option');
             opt.value = element._id;
             opt.innerHTML = element.name;
-            selectGuestOptions.appendChild(opt);
+            if (selectGuestOptions !== null) {
+              selectGuestOptions.appendChild(opt);
+            }
           }
         }
       }
@@ -262,78 +278,70 @@ function getEventOptions () {
           const opt = document.createElement('option');
           opt.value = element._id;
           opt.innerHTML = element.name;
-          selectEventOptions.appendChild(opt);
+          if (selectEventOptions !== null) {
+            selectEventOptions.appendChild(opt);
+          }
           count++;
         }
       }
-      /* sendDataForEvent({ da: objects.filteredGuests[0]._id, dt: objects.filteredEvents[0]._id })
-        .then(result => {
-          console.log(result);
-        })
-        .catch(error => {
-          console.error(error);
-        }); */
       if (count > 0) {
-        /* for (let i = 0; i < objects.filteredEvents.length; i++) {
-          const selectTableOptions = document.getElementById('guestevent');
-          const opt = document.createElement('option');
-          opt.value = objects.filteredEvents[i]._id;
-          opt.innerHTML = objects.filteredEvents[i].name;
-          selectTableOptions.appendChild(opt);
-        } */
         const selectRoomOptions = document.getElementById('rooms');
         let firstevent;
         for (const element of objects.filteredEvents) {
-          if (String(element._id) === String(selectEventOptions[0].value)) {
-            firstevent = element;
-            break;
-          }
-        }
-        for (let i = 0; i < firstevent.roomNumber.length; i++) {
-          const optRoom = document.createElement('option');
-          console.log(firstevent.roomNumber[i] + ' ' + i);
-          optRoom.value = firstevent.roomNumber[i];
-          optRoom.innerHTML = firstevent.roomNumber[i];
-          selectRoomOptions.appendChild(optRoom);
-        }
-        const roomnumber = firstevent.roomNumber[0];
-        let room;
-        for (const element of objects.rooms) {
-          if (element.number === roomnumber) {
-            room = element;
-            break;
-          }
-        }
-        const selectTableOptions = document.getElementById('seatTable');
-        for (let i = 0; i < room.tables.length; i++) {
-          const optTable = document.createElement('option');
-          optTable.value = room.tables[i].number;
-          optTable.innerHTML = i + 1;
-          selectTableOptions.appendChild(optTable);
-        }
-        const selectSeatOptions = document.getElementById('seatSeat');
-        selectSeatOptions.options.length = 0;
-        const listOfAvailableSeats = [];
-        console.log(firstevent);
-        console.log(firstevent.seatingPlan.length);
-        for (const element of firstevent.seatingPlan) {
-          console.log(firstevent.seatingPlan[0].seatNumber);
-          listOfAvailableSeats.push(element.seatNumber);
-        }
-        console.log(listOfAvailableSeats);
-        for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
-          let isTrue1 = false;
-          for (const element of listOfAvailableSeats) {
-            if (Number(element) === Number(i + 1)) {
-              isTrue1 = true;
+          if (selectEventOptions !== null) {
+            if (String(element._id) === String(selectEventOptions[0].value)) {
+              firstevent = element;
+              break;
             }
           }
-          if (isTrue1 === false) {
-            const optSeat = document.createElement('option');
-            const seatData = i + 1;
-            optSeat.value = seatData;
-            optSeat.innerHTML = i + 1;
-            selectSeatOptions.appendChild(optSeat);
+        }
+        if (firstevent !== undefined) {
+          for (let i = 0; i < firstevent.roomNumber.length; i++) {
+            const optRoom = document.createElement('option');
+            console.log(firstevent.roomNumber[i] + ' ' + i);
+            optRoom.value = firstevent.roomNumber[i];
+            optRoom.innerHTML = firstevent.roomNumber[i];
+            selectRoomOptions.appendChild(optRoom);
+          }
+          const roomnumber = firstevent.roomNumber[0];
+          let room;
+          for (const element of objects.rooms) {
+            if (element.number === roomnumber) {
+              room = element;
+              break;
+            }
+          }
+          const selectTableOptions = document.getElementById('seatTable');
+          for (let i = 0; i < room.tables.length; i++) {
+            const optTable = document.createElement('option');
+            optTable.value = room.tables[i].number;
+            optTable.innerHTML = i + 1;
+            selectTableOptions.appendChild(optTable);
+          }
+          const selectSeatOptions = document.getElementById('seatSeat');
+          selectSeatOptions.options.length = 0;
+          const listOfAvailableSeats = [];
+          console.log(firstevent);
+          console.log(firstevent.seatingPlan.length);
+          for (const element of firstevent.seatingPlan) {
+            console.log(firstevent.seatingPlan[0].seatNumber);
+            listOfAvailableSeats.push(element.seatNumber);
+          }
+          console.log(listOfAvailableSeats);
+          for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
+            let isTrue1 = false;
+            for (const element of listOfAvailableSeats) {
+              if (Number(element) === Number(i + 1)) {
+                isTrue1 = true;
+              }
+            }
+            if (isTrue1 === false) {
+              const optSeat = document.createElement('option');
+              const seatData = i + 1;
+              optSeat.value = seatData;
+              optSeat.innerHTML = i + 1;
+              selectSeatOptions.appendChild(optSeat);
+            }
           }
         }
       }
@@ -369,118 +377,28 @@ window.onload = function () {
 
   const selectedOption = document.getElementById('guestevent');
 
-  selectedOption.addEventListener('change', function (event) {
-    fetch('/api/dataEvent')
-      .then((res) => res.json())
-      .then((res) => {
-        const stringifiedObject = JSON.stringify(res);
-        const objects = JSON.parse(stringifiedObject);
-        let roomnumber;
-        const selectElement = event.target;
-        const selectedIndex = selectElement.selectedIndex;
-        const selectedOption = selectElement.options[selectedIndex];
-        const selectedValue = selectedOption.value;
-        let selectedEvent;
-        let firstevent;
-        for (let i = 0; i < objects.filteredEvents.length; i++) {
-          if (String(selectedValue) === String(objects.filteredEvents[i]._id)) {
-            firstevent = objects.filteredEvents[i];
-            roomnumber = objects.filteredEvents[i].roomNumber[0];
-            selectedEvent = objects.filteredEvents[i];
-            break;
-          }
-        }
-        const selectRoomOptions = document.getElementById('rooms');
-        selectRoomOptions.options.length = 0;
-        for (let i = 0; i < selectedEvent.roomNumber.length; i++) {
-          const optRoom = document.createElement('option');
-          optRoom.value = selectedEvent.roomNumber[i];
-          optRoom.innerHTML = selectedEvent.roomNumber[i];
-          selectRoomOptions.appendChild(optRoom);
-        }
-        let room;
-        for (let i = 0; i < objects.rooms.length; i++) {
-          if (objects.rooms[i].number === roomnumber) {
-            room = objects.rooms[i];
-            break;
-          }
-        }
-        const selectTableOptions = document.getElementById('seatTable');
-        selectTableOptions.options.length = 0;
-        for (let i = 0; i < room.tables.length; i++) {
-          const optTable = document.createElement('option');
-          optTable.value = room.tables[i].number;
-          optTable.innerHTML = i + 1;
-          selectTableOptions.appendChild(optTable);
-        }
-        const selectSeatOptions = document.getElementById('seatSeat');
-        selectSeatOptions.options.length = 0;
-        const listOfAvailableSeats = [];
-        for (let i = 0; i < firstevent.seatingPlan.length; i++) {
-          console.log(firstevent.seatingPlan[0].seatNumber);
-          listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
-        }
-        console.log(listOfAvailableSeats);
-        for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
-          let isTrue1 = false;
-          for (let g = 0; g < listOfAvailableSeats.length; g++) {
-            if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
-              isTrue1 = true;
-            }
-          }
-          if (isTrue1 === false) {
-            const optSeat = document.createElement('option');
-            const seatData = i + 1;
-            optSeat.value = seatData;
-            optSeat.innerHTML = i + 1;
-            selectSeatOptions.appendChild(optSeat);
-          }
-        }
-      }
-      );
-  });
-
-  // listen to changes in Guest selector
-
-  const selectedGuest = document.getElementById('gie');
-
-  selectedGuest.addEventListener('change', function (event) {
-    fetch('/api/dataEvent')
-      .then((res) => res.json())
-      .then((res) => {
-        const stringifiedObject = JSON.stringify(res);
-        const objects = JSON.parse(stringifiedObject);
-        const selectElement = event.target;
-        const selectedIndex = selectElement.selectedIndex;
-        const selectedOption = selectElement.options[selectedIndex];
-        const selectedValue = selectedOption.value;
-        const guestObject = selectedValue;
-        const selectEventOptions = document.getElementById('guestevent');
-        selectEventOptions.options.length = 0;
-        let firstevent;
-        for (let i = 0; i < objects.filteredEvents.length; i++) {
-          let isTrue = false;
-          for (let g = 0; g < objects.filteredEvents[i].seatingPlan.length; g++) {
-            if (String(guestObject) === String(objects.filteredEvents[i].seatingPlan[g].seatedBy)) {
-              isTrue = true;
-            }
-          }
-          if (isTrue === false) {
-            const opt = document.createElement('option');
-            opt.value = objects.filteredEvents[i]._id;
-            opt.innerHTML = objects.filteredEvents[i].name;
-            selectEventOptions.appendChild(opt);
-          }
-        }
-        let selectedEvent;
-        if (typeof selectEventOptions[0] !== 'undefined') {
+  if (selectedOption) {
+    selectedOption.addEventListener('change', function (event) {
+      fetch('/api/dataEvent')
+        .then((res) => res.json())
+        .then((res) => {
+          const stringifiedObject = JSON.stringify(res);
+          const objects = JSON.parse(stringifiedObject);
+          let roomnumber;
+          const selectElement = event.target;
+          const selectedIndex = selectElement.selectedIndex;
+          const selectedOption = selectElement.options[selectedIndex];
+          const selectedValue = selectedOption.value;
+          let selectedEvent;
+          let firstevent;
           for (let i = 0; i < objects.filteredEvents.length; i++) {
-            if (String(selectEventOptions[0].value) === String(objects.filteredEvents[i]._id)) {
+            if (String(selectedValue) === String(objects.filteredEvents[i]._id)) {
               firstevent = objects.filteredEvents[i];
+              roomnumber = objects.filteredEvents[i].roomNumber[0];
               selectedEvent = objects.filteredEvents[i];
+              break;
             }
           }
-          const roomnumber = selectedEvent.roomNumber[0];
           const selectRoomOptions = document.getElementById('rooms');
           selectRoomOptions.options.length = 0;
           for (let i = 0; i < selectedEvent.roomNumber.length; i++) {
@@ -527,216 +445,291 @@ window.onload = function () {
               selectSeatOptions.appendChild(optSeat);
             }
           }
-        } else {
-          const selectRoomOptions = document.getElementById('rooms');
-          selectRoomOptions.options.length = 0;
-          const selectTableOptions = document.getElementById('seatTable');
-          selectTableOptions.options.length = 0;
-          const selectSeatOptions = document.getElementById('seatSeat');
-          selectSeatOptions.options.length = 0;
-        }
-      }
-      );
-  });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  }
+
+  // listen to changes in Guest selector
+
+  const selectedGuest = document.getElementById('gie');
+
+  if (selectedGuest) {
+    selectedGuest.addEventListener('change', function (event) {
+      fetch('/api/dataEvent')
+        .then((res) => res.json())
+        .then((res) => {
+          const stringifiedObject = JSON.stringify(res);
+          const objects = JSON.parse(stringifiedObject);
+          const selectElement = event.target;
+          const selectedIndex = selectElement.selectedIndex;
+          const selectedOption = selectElement.options[selectedIndex];
+          const selectedValue = selectedOption.value;
+          const guestObject = selectedValue;
+          const selectEventOptions = document.getElementById('guestevent');
+          selectEventOptions.options.length = 0;
+          let firstevent;
+          for (let i = 0; i < objects.filteredEvents.length; i++) {
+            let isTrue = false;
+            for (let g = 0; g < objects.filteredEvents[i].seatingPlan.length; g++) {
+              if (String(guestObject) === String(objects.filteredEvents[i].seatingPlan[g].seatedBy)) {
+                isTrue = true;
+              }
+            }
+            if (isTrue === false) {
+              const opt = document.createElement('option');
+              opt.value = objects.filteredEvents[i]._id;
+              opt.innerHTML = objects.filteredEvents[i].name;
+              selectEventOptions.appendChild(opt);
+            }
+          }
+          let selectedEvent;
+          if (typeof selectEventOptions[0] !== 'undefined') {
+            for (let i = 0; i < objects.filteredEvents.length; i++) {
+              if (String(selectEventOptions[0].value) === String(objects.filteredEvents[i]._id)) {
+                firstevent = objects.filteredEvents[i];
+                selectedEvent = objects.filteredEvents[i];
+              }
+            }
+            const roomnumber = selectedEvent.roomNumber[0];
+            const selectRoomOptions = document.getElementById('rooms');
+            selectRoomOptions.options.length = 0;
+            for (let i = 0; i < selectedEvent.roomNumber.length; i++) {
+              const optRoom = document.createElement('option');
+              optRoom.value = selectedEvent.roomNumber[i];
+              optRoom.innerHTML = selectedEvent.roomNumber[i];
+              selectRoomOptions.appendChild(optRoom);
+            }
+            let room;
+            for (let i = 0; i < objects.rooms.length; i++) {
+              if (objects.rooms[i].number === roomnumber) {
+                room = objects.rooms[i];
+                break;
+              }
+            }
+            const selectTableOptions = document.getElementById('seatTable');
+            selectTableOptions.options.length = 0;
+            for (let i = 0; i < room.tables.length; i++) {
+              const optTable = document.createElement('option');
+              optTable.value = room.tables[i].number;
+              optTable.innerHTML = i + 1;
+              selectTableOptions.appendChild(optTable);
+            }
+            const selectSeatOptions = document.getElementById('seatSeat');
+            selectSeatOptions.options.length = 0;
+            const listOfAvailableSeats = [];
+            for (let i = 0; i < firstevent.seatingPlan.length; i++) {
+              console.log(firstevent.seatingPlan[0].seatNumber);
+              listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+            }
+            console.log(listOfAvailableSeats);
+            for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
+              let isTrue1 = false;
+              for (let g = 0; g < listOfAvailableSeats.length; g++) {
+                if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
+                  isTrue1 = true;
+                }
+              }
+              if (isTrue1 === false) {
+                const optSeat = document.createElement('option');
+                const seatData = i + 1;
+                optSeat.value = seatData;
+                optSeat.innerHTML = i + 1;
+                selectSeatOptions.appendChild(optSeat);
+              }
+            }
+          } else {
+            const selectRoomOptions = document.getElementById('rooms');
+            selectRoomOptions.options.length = 0;
+            const selectTableOptions = document.getElementById('seatTable');
+            selectTableOptions.options.length = 0;
+            const selectSeatOptions = document.getElementById('seatSeat');
+            selectSeatOptions.options.length = 0;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  }
 
   // listen to changes in Room selector
 
   const selectedOptionRoom = document.getElementById('rooms');
 
-  selectedOptionRoom.addEventListener('change', function (rooms) {
-    fetch('/api/dataEvent')
-      .then((res) => res.json())
-      .then((res) => {
-        const stringifiedObject = JSON.stringify(res);
-        const objects = JSON.parse(stringifiedObject);
-        const selectElement = rooms.target;
-        const selectedIndex = selectElement.selectedIndex;
-        const selectedOption = selectElement.options[selectedIndex];
-        const selectedValue = selectedOption.value;
-        let room;
-        for (let i = 0; i < objects.rooms.length; i++) {
-          if (Number(objects.rooms[i].number) === Number(selectedValue)) {
-            room = objects.rooms[i];
-            break;
-          }
-        }
-        const selectTableOptions = document.getElementById('seatTable');
-        selectTableOptions.options.length = 0;
-        for (let i = 0; i < room.tables.length; i++) {
-          const optTable = document.createElement('option');
-          optTable.value = room.tables[i].number;
-          optTable.innerHTML = i + 1;
-          selectTableOptions.appendChild(optTable);
-        }
-        const form = document.getElementById('event-form');
-        console.log(form.elements);
-        let firstevent;
-        for (let i = 0; i < objects.filteredEvents.length; i++) {
-          if (String(form.elements.guestevent.value) === String(objects.filteredEvents[i]._id)) {
-            firstevent = objects.filteredEvents[i];
-          }
-        }
-        const selectSeatOptions = document.getElementById('seatSeat');
-        selectSeatOptions.options.length = 0;
-        const listOfAvailableSeats = [];
-        for (let i = 0; i < firstevent.seatingPlan.length; i++) {
-          console.log(firstevent.seatingPlan[0].seatNumber);
-          listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
-        }
-        console.log(listOfAvailableSeats);
-        for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
-          let isTrue1 = false;
-          for (let g = 0; g < listOfAvailableSeats.length; g++) {
-            if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
-              isTrue1 = true;
+  if (selectedOptionRoom) {
+    selectedOptionRoom.addEventListener('change', function (rooms) {
+      fetch('/api/dataEvent')
+        .then((res) => res.json())
+        .then((res) => {
+          const stringifiedObject = JSON.stringify(res);
+          const objects = JSON.parse(stringifiedObject);
+          const selectElement = rooms.target;
+          const selectedIndex = selectElement.selectedIndex;
+          const selectedOption = selectElement.options[selectedIndex];
+          const selectedValue = selectedOption.value;
+          let room;
+          for (let i = 0; i < objects.rooms.length; i++) {
+            if (Number(objects.rooms[i].number) === Number(selectedValue)) {
+              room = objects.rooms[i];
+              break;
             }
           }
-          if (isTrue1 === false) {
-            const optSeat = document.createElement('option');
-            const seatData = i + 1;
-            optSeat.value = seatData;
-            optSeat.innerHTML = i + 1;
-            selectSeatOptions.appendChild(optSeat);
+          const selectTableOptions = document.getElementById('seatTable');
+          selectTableOptions.options.length = 0;
+          for (let i = 0; i < room.tables.length; i++) {
+            const optTable = document.createElement('option');
+            optTable.value = room.tables[i].number;
+            optTable.innerHTML = i + 1;
+            selectTableOptions.appendChild(optTable);
           }
-        }
-      }
-      );
-  });
+          const form = document.getElementById('event-form');
+          console.log(form.elements);
+          let firstevent;
+          for (let i = 0; i < objects.filteredEvents.length; i++) {
+            if (String(form.elements.guestevent.value) === String(objects.filteredEvents[i]._id)) {
+              firstevent = objects.filteredEvents[i];
+            }
+          }
+          const selectSeatOptions = document.getElementById('seatSeat');
+          selectSeatOptions.options.length = 0;
+          const listOfAvailableSeats = [];
+          for (let i = 0; i < firstevent.seatingPlan.length; i++) {
+            console.log(firstevent.seatingPlan[0].seatNumber);
+            listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+          }
+          console.log(listOfAvailableSeats);
+          for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
+            let isTrue1 = false;
+            for (let g = 0; g < listOfAvailableSeats.length; g++) {
+              if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
+                isTrue1 = true;
+              }
+            }
+            if (isTrue1 === false) {
+              const optSeat = document.createElement('option');
+              const seatData = i + 1;
+              optSeat.value = seatData;
+              optSeat.innerHTML = i + 1;
+              selectSeatOptions.appendChild(optSeat);
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  }
 
   // listen to changes in table selector
 
   const selectedOptionTable = document.getElementById('seatTable');
 
-  selectedOptionTable.addEventListener('change', function (tables) {
-    fetch('/api/dataEvent')
-      .then((res) => res.json())
-      .then((res) => {
-        const stringifiedObject = JSON.stringify(res);
-        const objects = JSON.parse(stringifiedObject);
-        const selectElement = tables.target;
-        const selectedIndex = selectElement.selectedIndex;
-        const selectedOption = selectElement.options[selectedIndex];
-        const selectedValue = selectedOption.value;
-        const selectSeatOptions = document.getElementById('seatSeat');
-        selectSeatOptions.options.length = 0;
-        // let targetedTable;
-        let roomnum;
-        for (let i = 0; i < objects.rooms.length; i++) {
-          for (let g = 0; g < objects.rooms[i].tables.length; g++) {
-            if (Number(selectedValue) === Number(objects.rooms[i].tables[g].number)) {
-              // targetedTable = objects.rooms[i].tables[g];
-              roomnum = objects.rooms[i];
-              break;
+  if (selectedOptionTable) {
+    selectedOptionTable.addEventListener('change', function (tables) {
+      fetch('/api/dataEvent')
+        .then((res) => res.json())
+        .then((res) => {
+          const stringifiedObject = JSON.stringify(res);
+          const objects = JSON.parse(stringifiedObject);
+          const selectElement = tables.target;
+          const selectedIndex = selectElement.selectedIndex;
+          const selectedOption = selectElement.options[selectedIndex];
+          const selectedValue = selectedOption.value;
+          const selectSeatOptions = document.getElementById('seatSeat');
+          selectSeatOptions.options.length = 0;
+          let roomnum;
+          for (let i = 0; i < objects.rooms.length; i++) {
+            for (let g = 0; g < objects.rooms[i].tables.length; g++) {
+              if (Number(selectedValue) === Number(objects.rooms[i].tables[g].number)) {
+                roomnum = objects.rooms[i];
+                break;
+              }
             }
           }
-        }
-        /* const selectTableOptions = document.getElementById('seatTable');
-        selectTableOptions.options.length = 0;
-        for (let i = 0; i < roomnum.tables.length; i++) {
-          console.log('test');
-          const optTable = document.createElement('option');
-          optTable.value = roomnum.tables[i].number;
-          optTable.innerHTML = i + 1;
-          selectTableOptions.appendChild(optTable);
-        } */
-        const form = document.getElementById('event-form');
-        console.log(form.elements);
-        let firstevent;
-        for (let i = 0; i < objects.filteredEvents.length; i++) {
-          if (String(form.elements.guestevent.value) === String(objects.filteredEvents[i]._id)) {
-            firstevent = objects.filteredEvents[i];
-          }
-        }
-        const listOfAvailableSeats = [];
-        for (let i = 0; i < firstevent.seatingPlan.length; i++) {
-          console.log(firstevent.seatingPlan[0].seatNumber);
-          listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
-        }
-        for (let i = 0; i < roomnum.tables[0].seatsAvailable; i++) {
-          let isTrue1 = false;
-          for (let g = 0; g < listOfAvailableSeats.length; g++) {
-            if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
-              isTrue1 = true;
+          const form = document.getElementById('event-form');
+          console.log(form.elements);
+          let firstevent;
+          for (let i = 0; i < objects.filteredEvents.length; i++) {
+            if (String(form.elements.guestevent.value) === String(objects.filteredEvents[i]._id)) {
+              firstevent = objects.filteredEvents[i];
             }
           }
-          if (isTrue1 === false) {
-            const optSeat = document.createElement('option');
-            const seatData = i + 1;
-            optSeat.value = seatData;
-            optSeat.innerHTML = i + 1;
-            selectSeatOptions.appendChild(optSeat);
+          const listOfAvailableSeats = [];
+          for (let i = 0; i < firstevent.seatingPlan.length; i++) {
+            console.log(firstevent.seatingPlan[0].seatNumber);
+            listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
           }
-        }
-      }
-      );
-  });
+          for (let i = 0; i < roomnum.tables[0].seatsAvailable; i++) {
+            let isTrue1 = false;
+            for (let g = 0; g < listOfAvailableSeats.length; g++) {
+              if (Number(listOfAvailableSeats[g]) === Number(i + 1)) {
+                isTrue1 = true;
+              }
+            }
+            if (isTrue1 === false) {
+              const optSeat = document.createElement('option');
+              const seatData = i + 1;
+              optSeat.value = seatData;
+              optSeat.innerHTML = i + 1;
+              selectSeatOptions.appendChild(optSeat);
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  }
 
   // date tag changes
 
   const dateTag = document.getElementById('edate');
 
-  dateTag.addEventListener('change', function () {
-    const div = document.getElementById('contain');
-    div.innerHTML = '';
-    fetch('/api/dataEvent')
-      .then((res) => res.json())
-      .then((res) => {
-        const stringifiedObject = JSON.stringify(res);
-        const objects = JSON.parse(stringifiedObject);
-        const input = document.getElementById('edate');
-        const value = input.value;
-        console.log(value);
-        let isTrue = false;
-        const dat = new Date(value);
-        let listOfRoomsAvailable;
-        if (objects.rooms.length !== 0) {
-          sendData({ da: dat })
-            .then(result => {
-              listOfRoomsAvailable = result;
-              if (listOfRoomsAvailable.rooms.length > 0) {
-                isTrue = true;
-              }
-              if (listOfRoomsAvailable.rooms.length !== objects.rooms.length) {
-                if (isTrue === true) {
-                  const select = document.createElement('select');
-                  select.id = 'roomforevent';
-                  select.name = 'roomforevent';
-                  select.multiple = true;
-                  let isTrue1 = false;
-                  for (let i = 0; i < objects.rooms.length; i++) {
-                    for (let g = 0; g < listOfRoomsAvailable.rooms.length; g++) {
-                      if (Number(listOfRoomsAvailable.rooms[g]) === Number(objects.rooms[i].number)) {
-                        isTrue1 = true;
-                      }
-                    }
-                    if (isTrue1 === false) {
-                      const opt = document.createElement('option');
-                      opt.value = objects.rooms[i].number;
-                      opt.innerHTML = objects.rooms[i].number;
-                      select.appendChild(opt);
-                    }
-                    isTrue1 = false;
-                  }
-                  const label = document.createElement('label');
-                  label.innerHTML = 'Room';
-                  const container = document.getElementById('contain');
-                  container.appendChild(label);
-                  container.appendChild(select);
-                  const submitButton = document.createElement('input');
-                  submitButton.type = 'submit';
-                  submitButton.value = 'Submit';
-                  container.appendChild(submitButton);
-                } else {
-                  if (objects.rooms.length !== 0) {
+  if (dateTag) {
+    dateTag.addEventListener('change', function () {
+      const div = document.getElementById('contain');
+      div.innerHTML = '';
+      fetch('/api/dataEvent')
+        .then((res) => res.json())
+        .then((res) => {
+          const stringifiedObject = JSON.stringify(res);
+          const objects = JSON.parse(stringifiedObject);
+          const input = document.getElementById('edate');
+          const value = input.value;
+          console.log(value);
+          let isTrue = false;
+          const dat = new Date(value);
+          let listOfRoomsAvailable;
+          if (objects.rooms.length !== 0) {
+            sendData({ da: dat })
+              .then(result => {
+                listOfRoomsAvailable = result;
+                if (listOfRoomsAvailable.rooms.length > 0) {
+                  isTrue = true;
+                }
+                if (listOfRoomsAvailable.rooms.length !== objects.rooms.length) {
+                  if (isTrue === true) {
                     const select = document.createElement('select');
                     select.id = 'roomforevent';
                     select.name = 'roomforevent';
                     select.multiple = true;
+                    let isTrue1 = false;
                     for (let i = 0; i < objects.rooms.length; i++) {
-                      const opt = document.createElement('option');
-                      opt.value = objects.rooms[i].number;
-                      opt.innerHTML = objects.rooms[i].number;
-                      select.appendChild(opt);
+                      for (let g = 0; g < listOfRoomsAvailable.rooms.length; g++) {
+                        if (Number(listOfRoomsAvailable.rooms[g]) === Number(objects.rooms[i].number)) {
+                          isTrue1 = true;
+                        }
+                      }
+                      if (isTrue1 === false) {
+                        const opt = document.createElement('option');
+                        opt.value = objects.rooms[i].number;
+                        opt.innerHTML = objects.rooms[i].number;
+                        select.appendChild(opt);
+                      }
+                      isTrue1 = false;
                     }
                     const label = document.createElement('label');
                     label.innerHTML = 'Room';
@@ -745,67 +738,42 @@ window.onload = function () {
                     container.appendChild(select);
                     const submitButton = document.createElement('input');
                     submitButton.type = 'submit';
-                    submitButton.id = 'submit';
                     submitButton.value = 'Submit';
                     container.appendChild(submitButton);
+                  } else {
+                    if (objects.rooms.length !== 0) {
+                      const select = document.createElement('select');
+                      select.id = 'roomforevent';
+                      select.name = 'roomforevent';
+                      select.multiple = true;
+                      for (let i = 0; i < objects.rooms.length; i++) {
+                        const opt = document.createElement('option');
+                        opt.value = objects.rooms[i].number;
+                        opt.innerHTML = objects.rooms[i].number;
+                        select.appendChild(opt);
+                      }
+                      const label = document.createElement('label');
+                      label.innerHTML = 'Room';
+                      const container = document.getElementById('contain');
+                      container.appendChild(label);
+                      container.appendChild(select);
+                      const submitButton = document.createElement('input');
+                      submitButton.type = 'submit';
+                      submitButton.id = 'submit';
+                      submitButton.value = 'Submit';
+                      container.appendChild(submitButton);
+                    }
                   }
                 }
-              }
-            })
-            .catch(error => {
-              console.error(error);
-            });
-          /* const select = document.createElement('select');
-          select.id = 'room';
-          select.multiple = true;
-          for (let i = 0; i < listOfRoomsAvailable.length; i++) {
-            const opt = document.createElement('option');
-            opt.value = listOfRoomsAvailable[i].number;
-            opt.innerHTML = listOfRoomsAvailable[i].number;
-            select.appendChild(opt);
+              })
+              .catch(error => {
+                console.error(error);
+              });
           }
-          const label = document.createElement('label');
-          label.innerHTML = 'Room';
-          const container = document.getElementById('contain');
-          container.appendChild(label);
-          container.appendChild(select); */
-        }
-      }
-      );
-  });
-
-  /* const form = document.getElementById('event-form');
-  form.addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    const formElements = event.target.elements;
-    console.log(formElements.roomforevent.selectedOptions);
-
-    for (let i = 0; i < formElements.length; i++) {
-      console.log(formElements[i].name + ':' + formElements[i].value);
-    }
-  }); */
-
-  // submitting a form
-
-  /* const form = document.querySelector('guestForm');
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const name = document.getElementById('name').value;
-    const child = document.getElementById('isChild').value;
-    const status = document.getElementById('gstatus').value;
-    const data = {
-      name,
-      child,
-      status
-    };
-    const response = await fetch('/api/submit', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     });
-    console.log(await response.json());
-  }); */
+  }
 };
