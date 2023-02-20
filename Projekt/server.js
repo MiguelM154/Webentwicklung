@@ -426,17 +426,18 @@ app.post('/new-placement', (req, res) => {
     }
     const db = client.db('occassionDB');
     const collection = db.collection('events');
-      collection.updateOne({ _id: ObjectId(req.body.guestevent) },
-      { $push: { 
-        seatingPlan: { 
-          roomNumber: req.body.rooms, 
-          tableNumber: req.body.seatTable, 
-          seatedBy: ObjectId(req.body.gie), 
-          seatNumber: req.body.seatSeat,
-          typeoftableseat: 'undefined',
-          tableform: 'undefined'
-          } 
-        } 
+    collection.updateOne({ _id: ObjectId(req.body.guestevent) },
+      {
+        $push: {
+          seatingPlan: {
+            roomNumber: req.body.rooms,
+            tableNumber: req.body.seatTable,
+            seatedBy: ObjectId(req.body.gie),
+            seatNumber: req.body.seatSeat,
+            typeoftableseat: 'undefined',
+            tableform: 'undefined'
+          }
+        }
       }
     );
   });
@@ -450,15 +451,15 @@ app.post('/delete-event', function (req, res) {
     if (error) {
       console.log(error);
     } else if (exists) {
-        const idofEventToDelete = {_id: req.body.eventId};
-        Event.deleteOne(idofEventToDelete,(error) => {
+      const idofEventToDelete = { _id: req.body.eventId };
+      Event.deleteOne(idofEventToDelete, (error) => {
         if (error) {
           console.log(error);
         } else {
           console.log('Event "' + req.body.eventId + '" wurde geloescht.');
           res.redirect('/delevent');
         }
-      });    
+      });
     }
   });
 });
@@ -470,22 +471,22 @@ app.post('/delete-gast', function (req, res) {
     if (error) {
       console.log(error);
     } else if (exists) {
-        const idofGuestToDelete = { _id: req.body.gastid };
-        Guest.deleteOne(idofGuestToDelete, (error) => {
+      const idofGuestToDelete = { _id: req.body.gastid };
+      Guest.deleteOne(idofGuestToDelete, (error) => {
         if (error) {
           console.log(error);
         } else {
           console.log('Gast "' + req.body.gastid + '" wurde geloescht.');
           res.redirect('/delevent');
         }
-      });    
+      });
     } else {
       console.log('Gast existiert nicht');
     }
   });
 });
 
-//Reservierung Löschen
+// Reservierung Löschen
 app.post('/delete-reserv', function (req, res) {
   const ObjectId = require('mongodb').ObjectId;
   const MongoClient = require('mongodb').MongoClient;
@@ -498,14 +499,15 @@ app.post('/delete-reserv', function (req, res) {
     const db = client.db('occassionDB');
     const collection = db.collection('events');
     collection.updateOne({ _id: ObjectId(req.body.elemid) },
-      { $pull: { 
-        seatingPlan: { 
-          roomNumber: req.body.roomNumber, 
-          tableNumber: req.body.tableNumber, 
-          seatedBy: ObjectId(req.body.seatedBy), 
-          seatNumber: req.body.seatNumber 
-          } 
-        } 
+      {
+        $pull: {
+          seatingPlan: {
+            roomNumber: req.body.roomNumber,
+            tableNumber: req.body.tableNumber,
+            seatedBy: ObjectId(req.body.seatedBy),
+            seatNumber: req.body.seatNumber
+          }
+        }
       }
     );
   });
@@ -525,14 +527,14 @@ app.post('/update-placement', (req, res) => {
     }
     const db = client.db('occassionDB');
     const collection = db.collection('events');
-    const query = { _id: ObjectId(req.body.elemid), "seatingPlan.roomNumber": req.body.roomNumber, "seatingPlan.tableNumber": req.body.tableNumber };
-    const setter = ({ 
-      $set: { 
-        "seatingPlan.$[].typeoftableseat": req.body.seatorder
-      } 
+    const query = { _id: ObjectId(req.body.elemid), 'seatingPlan.roomNumber': req.body.roomNumber, 'seatingPlan.tableNumber': req.body.tableNumber };
+    const setter = ({
+      $set: {
+        'seatingPlan.$[].typeoftableseat': req.body.seatorder
+      }
     });
-      await collection.updateOne(query, setter);
-  }); 
+    await collection.updateOne(query, setter);
+  });
   res.redirect('/delevent');
 });
 
@@ -549,14 +551,14 @@ app.post('/update-tableform', (req, res) => {
     }
     const db = client.db('occassionDB');
     const collection = db.collection('events');
-    const query = { _id: ObjectId(req.body.elemid), "seatingPlan.roomNumber": req.body.roomNumber, "seatingPlan.tableNumber": req.body.tableNumber };
-    const setter = ({ 
-      $set: { 
-        "seatingPlan.$[].tableform": req.body.tableform
-      } 
+    const query = { _id: ObjectId(req.body.elemid), 'seatingPlan.roomNumber': req.body.roomNumber, 'seatingPlan.tableNumber': req.body.tableNumber };
+    const setter = ({
+      $set: {
+        'seatingPlan.$[].tableform': req.body.tableform
+      }
     });
-      await collection.updateOne(query, setter);
-  }); 
+    await collection.updateOne(query, setter);
+  });
   res.redirect('/delevent');
 });
 

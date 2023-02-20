@@ -226,7 +226,7 @@ function getDataErweiterung () {
         }
       }
     }
-  );
+    );
 }
 getDataErweiterung();
 
