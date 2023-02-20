@@ -411,12 +411,6 @@ app.post('/data-guest-event', function (req, res) {
 
 app.post('/new-placement', (req, res) => {
   const ObjectId = require('mongodb').ObjectId;
-  console.log(req.body.gie);
-  console.log(req.body.guestevent);
-  console.log(req.body.rooms);
-  console.log(req.body.seatTable);
-  console.log(req.body.seatSeat);
-  console.log(ObjectId(req.body.guestevent));
   const MongoClient = require('mongodb').MongoClient;
   const uri = 'mongodb://127.0.0.1:27017/';
 
@@ -456,7 +450,6 @@ app.post('/delete-event', function (req, res) {
         if (error) {
           console.log(error);
         } else {
-          console.log('Event "' + req.body.eventId + '" wurde geloescht.');
           res.redirect('/delevent');
         }
       });
@@ -476,7 +469,6 @@ app.post('/delete-gast', function (req, res) {
         if (error) {
           console.log(error);
         } else {
-          console.log('Gast "' + req.body.gastid + '" wurde geloescht.');
           res.redirect('/delevent');
         }
       });

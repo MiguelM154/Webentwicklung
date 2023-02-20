@@ -298,7 +298,6 @@ function getEventOptions () {
         if (firstevent !== undefined) {
           for (let i = 0; i < firstevent.roomNumber.length; i++) {
             const optRoom = document.createElement('option');
-            console.log(firstevent.roomNumber[i] + ' ' + i);
             optRoom.value = firstevent.roomNumber[i];
             optRoom.innerHTML = firstevent.roomNumber[i];
             selectRoomOptions.appendChild(optRoom);
@@ -321,13 +320,10 @@ function getEventOptions () {
           const selectSeatOptions = document.getElementById('seatSeat');
           selectSeatOptions.options.length = 0;
           const listOfAvailableSeats = [];
-          console.log(firstevent);
-          console.log(firstevent.seatingPlan.length);
           for (const element of firstevent.seatingPlan) {
             console.log(firstevent.seatingPlan[0].seatNumber);
             listOfAvailableSeats.push(element.seatNumber);
           }
-          console.log(listOfAvailableSeats);
           for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
             let isTrue1 = false;
             for (const element of listOfAvailableSeats) {
@@ -426,10 +422,8 @@ window.onload = function () {
           selectSeatOptions.options.length = 0;
           const listOfAvailableSeats = [];
           for (let i = 0; i < firstevent.seatingPlan.length; i++) {
-            console.log(firstevent.seatingPlan[0].seatNumber);
             listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
           }
-          console.log(listOfAvailableSeats);
           for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
             let isTrue1 = false;
             for (let g = 0; g < listOfAvailableSeats.length; g++) {
@@ -521,10 +515,8 @@ window.onload = function () {
             selectSeatOptions.options.length = 0;
             const listOfAvailableSeats = [];
             for (let i = 0; i < firstevent.seatingPlan.length; i++) {
-              console.log(firstevent.seatingPlan[0].seatNumber);
               listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
             }
-            console.log(listOfAvailableSeats);
             for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
               let isTrue1 = false;
               for (let g = 0; g < listOfAvailableSeats.length; g++) {
@@ -586,7 +578,6 @@ window.onload = function () {
             selectTableOptions.appendChild(optTable);
           }
           const form = document.getElementById('event-form');
-          console.log(form.elements);
           let firstevent;
           for (let i = 0; i < objects.filteredEvents.length; i++) {
             if (String(form.elements.guestevent.value) === String(objects.filteredEvents[i]._id)) {
@@ -650,7 +641,6 @@ window.onload = function () {
             }
           }
           const form = document.getElementById('event-form');
-          console.log(form.elements);
           let firstevent;
           for (let i = 0; i < objects.filteredEvents.length; i++) {
             if (String(form.elements.guestevent.value) === String(objects.filteredEvents[i]._id)) {
@@ -702,7 +692,6 @@ window.onload = function () {
           const objects = JSON.parse(stringifiedObject);
           const input = document.getElementById('edate');
           const value = input.value;
-          console.log(value);
           let isTrue = false;
           const dat = new Date(value);
           let listOfRoomsAvailable;
