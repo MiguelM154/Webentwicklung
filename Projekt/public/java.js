@@ -659,9 +659,10 @@ window.onload = function () {
           }
           const listOfAvailableSeats = [];
           for (let i = 0; i < firstevent.seatingPlan.length; i++) {
-            console.log('test ' + roomnum.number + ' ' + firstevent.seatingPlan[i].roomNumber);
             if (Number(roomnum.number) === Number(firstevent.seatingPlan[i].roomNumber)) {
-              listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+              if (Number(selectedValue) === Number(firstevent.seatingPlan[i].tableNumber)) {
+                listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+              }
             }
           }
           for (let i = 0; i < roomnum.tables[0].seatsAvailable; i++) {
