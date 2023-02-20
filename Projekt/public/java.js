@@ -597,10 +597,10 @@ window.onload = function () {
           selectSeatOptions.options.length = 0;
           const listOfAvailableSeats = [];
           for (let i = 0; i < firstevent.seatingPlan.length; i++) {
-            console.log(firstevent.seatingPlan[0].seatNumber);
-            listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+            if (Number(room.number) === Number(firstevent.seatingPlan[i].roomNumber)) {
+              listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+            }
           }
-          console.log(listOfAvailableSeats);
           for (let i = 0; i < room.tables[0].seatsAvailable; i++) {
             let isTrue1 = false;
             for (let g = 0; g < listOfAvailableSeats.length; g++) {
@@ -659,8 +659,10 @@ window.onload = function () {
           }
           const listOfAvailableSeats = [];
           for (let i = 0; i < firstevent.seatingPlan.length; i++) {
-            console.log(firstevent.seatingPlan[0].seatNumber);
-            listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+            console.log('test ' + roomnum.number + ' ' + firstevent.seatingPlan[i].roomNumber);
+            if (Number(roomnum.number) === Number(firstevent.seatingPlan[i].roomNumber)) {
+              listOfAvailableSeats.push(firstevent.seatingPlan[i].seatNumber);
+            }
           }
           for (let i = 0; i < roomnum.tables[0].seatsAvailable; i++) {
             let isTrue1 = false;
